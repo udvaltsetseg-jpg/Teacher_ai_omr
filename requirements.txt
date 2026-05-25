@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+pillow
+google-generativeai
+openai
+reportlab
+opencv-python-headless
+streamlit-cropper
+openpyxl
