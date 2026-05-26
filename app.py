@@ -28,62 +28,29 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 
 # ============================================================
-# PDF FONT FIX
-# Streamlit Cloud/Linux дээр Helvetica Монгол кирилл дэмжихгүй тул
-# системд байгаа Unicode TTF фонтыг автоматаар хайж register хийнэ.
-# Файл repo-д font upload хийх шаардлагагүй.
+# PDF FONT FIX FOR MONGOLIAN / CYRILLIC
+# Helvetica кирилл дэмжихгүй тул DejaVuSans / Arial Unicode хайж register хийнэ.
+# Streamlit Cloud дээр packages.txt-д fonts-dejavu-core гэж нэмэхэд
+# /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf автоматаар олдоно.
 # ============================================================
 
-def find_unicode_font():
-    preferred_files = [
-        "DejaVuSans.ttf",
-        "DejaVuSansCondensed.ttf",
-        "NotoSans-Regular.ttf",
-        "NotoSansCJK-Regular.ttc",
-        "NotoSansCJKkr-Regular.otf",
-        "Arial Unicode.ttf",
-        "Arial.ttf",
-    ]
-
-    search_dirs = [
-        "/usr/share/fonts",
-        "/usr/local/share/fonts",
-        "/System/Library/Fonts",
-        "/System/Library/Fonts/Supplemental",
-        "/Library/Fonts",
-    ]
-
-    # 1) Шууд мэдэгдэж буй path-уудаас хайна
-    direct_paths = [
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
-        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
-        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
-        "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/Library/Fonts/Arial Unicode.ttf",
-        "/Library/Fonts/DejaVuSans.ttf",
-    ]
-
-    for p in direct_paths:
-        if os.path.exists(p):
-            return p
-
-    # 2) Folder дотор recursive хайна
-    for folder in search_dirs:
-        if not os.path.exists(folder):
-            continue
-
-        for preferred in preferred_files:
-            for root, _, files in os.walk(folder):
-                if preferred in files:
-                    return os.path.join(root, preferred)
-
-    return None
-
-
 PDF_FONT = "Helvetica"
-PDF_FONT_PATH = find_unicode_font()
+PDF_FONT_PATH = None
+
+FONT_PATHS = [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
+    "/usr/local/share/fonts/DejaVuSans.ttf",
+    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "/Library/Fonts/Arial Unicode.ttf",
+    "/Library/Fonts/DejaVuSans.ttf",
+]
+
+for path in FONT_PATHS:
+    if os.path.exists(path):
+        PDF_FONT_PATH = path
+        break
 
 if PDF_FONT_PATH:
     try:
@@ -166,11 +133,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# PDF font status
 if PDF_FONT == "Helvetica":
-    st.warning(
-        "PDF Монгол фонт олдсонгүй. Parent PDF дээр кирилл үсэг буруу харагдаж магадгүй. "
-        "Streamlit Cloud дээр ихэвчлэн DejaVuSans автоматаар олддог."
-    )
+    st.warning("PDF Монгол фонт олдсонгүй. GitHub дээр packages.txt файлд fonts-dejavu-core гэж нэмээд redeploy хийнэ үү.")
 
 if "batch_results" not in st.session_state:
     st.session_state.batch_results = []
@@ -1049,6 +1014,11 @@ Bloom түвшин ахиулах шаталсан даалгавар өгөх
 Сурагчийн Bloom анализ дээр үндэслэн
 Монгол хэлээр дараах бүтэцтэй зөвлөмж өг.
 
+Анхаарах:
+- Markdown тэмдэглэгээ битгий ашигла.
+- Дууны үг, номын хэсэг, copyrighted content бүү үүсгэ.
+- Зөвхөн өөрийн боловсруулсан богино зөвлөмж бич.
+
 1. Давуу тал
 2. Сул тал
 3. Сайжруулах арга
@@ -1059,7 +1029,19 @@ Bloom анализ:
 {bloom_summary}
 """
                     response = model.generate_content(gemini_prompt)
-                    gemini_text = response.text
+
+                    try:
+                        gemini_text = response.text
+                    except Exception:
+                        try:
+                            gemini_text = response.candidates[0].content.parts[0].text
+                        except Exception as e:
+                            gemini_text = (
+                                "Gemini AI зөвлөмж үүсгэж чадсангүй. "
+                                "Prompt нь safety/copyright filter-д блоклогдсон байж магадгүй. "
+                                f"Дэлгэрэнгүй: {e}"
+                            )
+
                     gemini_html = html_lib.escape(gemini_text).replace("\n", "<br>")
 
                     st.session_state.gemini_result = gemini_text
