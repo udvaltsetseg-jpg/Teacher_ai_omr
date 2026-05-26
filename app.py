@@ -26,24 +26,71 @@ except Exception:
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-FONT_PATHS = [
-    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
-    "/System/Library/Fonts/Supplemental/Arial.ttf",
-    "/Library/Fonts/Arial Unicode.ttf",
-    "/Library/Fonts/DejaVuSans.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-]
+
+# ============================================================
+# PDF FONT FIX
+# Streamlit Cloud/Linux дээр Helvetica Монгол кирилл дэмжихгүй тул
+# системд байгаа Unicode TTF фонтыг автоматаар хайж register хийнэ.
+# Файл repo-д font upload хийх шаардлагагүй.
+# ============================================================
+
+def find_unicode_font():
+    preferred_files = [
+        "DejaVuSans.ttf",
+        "DejaVuSansCondensed.ttf",
+        "NotoSans-Regular.ttf",
+        "NotoSansCJK-Regular.ttc",
+        "NotoSansCJKkr-Regular.otf",
+        "Arial Unicode.ttf",
+        "Arial.ttf",
+    ]
+
+    search_dirs = [
+        "/usr/share/fonts",
+        "/usr/local/share/fonts",
+        "/System/Library/Fonts",
+        "/System/Library/Fonts/Supplemental",
+        "/Library/Fonts",
+    ]
+
+    # 1) Шууд мэдэгдэж буй path-уудаас хайна
+    direct_paths = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/Library/Fonts/Arial Unicode.ttf",
+        "/Library/Fonts/DejaVuSans.ttf",
+    ]
+
+    for p in direct_paths:
+        if os.path.exists(p):
+            return p
+
+    # 2) Folder дотор recursive хайна
+    for folder in search_dirs:
+        if not os.path.exists(folder):
+            continue
+
+        for preferred in preferred_files:
+            for root, _, files in os.walk(folder):
+                if preferred in files:
+                    return os.path.join(root, preferred)
+
+    return None
+
 
 PDF_FONT = "Helvetica"
+PDF_FONT_PATH = find_unicode_font()
 
-for path in FONT_PATHS:
-    if os.path.exists(path):
-        try:
-            pdfmetrics.registerFont(TTFont("MongolianFont", path))
-            PDF_FONT = "MongolianFont"
-            break
-        except Exception:
-            pass
+if PDF_FONT_PATH:
+    try:
+        pdfmetrics.registerFont(TTFont("MongolianFont", PDF_FONT_PATH))
+        PDF_FONT = "MongolianFont"
+    except Exception:
+        PDF_FONT = "Helvetica"
 
 BLOOM_FULL = {
     "R": "Remember / Санах",
@@ -118,6 +165,12 @@ st.markdown("""
     <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
 </div>
 """, unsafe_allow_html=True)
+
+if PDF_FONT == "Helvetica":
+    st.warning(
+        "PDF Монгол фонт олдсонгүй. Parent PDF дээр кирилл үсэг буруу харагдаж магадгүй. "
+        "Streamlit Cloud дээр ихэвчлэн DejaVuSans автоматаар олддог."
+    )
 
 if "batch_results" not in st.session_state:
     st.session_state.batch_results = []
