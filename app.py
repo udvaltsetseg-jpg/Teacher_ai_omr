@@ -1321,6 +1321,12 @@ with st.sidebar:
     if st.button("🏠 Нүүр хуудас", use_container_width=True, key="sidebar_home_btn"):
         go_page("home")
 
+    if st.button("📊 Даалгаврын анализ", use_container_width=True, key="sidebar_assignment_analysis_btn"):
+        go_page("assignment_analysis")
+
+    if st.button("📝 Тест засах", use_container_width=True, key="sidebar_test_checker_btn"):
+        go_page("test_checker")
+
     if st.button("📁 Бэлэн Excel → Дүнгийн багц", use_container_width=True, key="sidebar_excel_btn"):
         go_page("excel")
 
@@ -1339,6 +1345,43 @@ with st.sidebar:
         Асуулт байвал support@example.com хаягаар холбогдоно уу.
     </div>
     """), unsafe_allow_html=True)
+
+
+if st.session_state.current_page == "assignment_analysis":
+    top_col1, top_col2 = st.columns([1, 5])
+    with top_col1:
+        if st.button("⬅️ Нүүр хуудас", use_container_width=True, key="back_home_from_assignment"):
+            go_page("home")
+    with top_col2:
+        st.markdown("## 📊 Даалгаврын анализ")
+        st.caption("Grade Viewer системийн даалгаврын анализ хэсэг.")
+
+    components.iframe(
+        "https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html",
+        height=900,
+        scrolling=True,
+    )
+
+    st.stop()
+
+
+if st.session_state.current_page == "test_checker":
+    top_col1, top_col2 = st.columns([1, 5])
+    with top_col1:
+        if st.button("⬅️ Нүүр хуудас", use_container_width=True, key="back_home_from_test_checker"):
+            go_page("home")
+    with top_col2:
+        st.markdown("## 📝 Тест засах")
+        st.caption("Grade Viewer системийн тест засах хэсэг.")
+
+    components.iframe(
+        "https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html",
+        height=900,
+        scrolling=True,
+    )
+
+    st.stop()
+
 
 if st.session_state.current_page == "home":
 
@@ -1373,9 +1416,7 @@ if st.session_state.current_page == "home":
         """), unsafe_allow_html=True)
 
         if st.button("📊 Даалгаврын анализ нээх", use_container_width=True, key="home_assignment_analysis_open"):
-            st.markdown(dedent("""
-            <meta http-equiv="refresh" content="0; url=https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html">
-            """), unsafe_allow_html=True)
+            go_page("assignment_analysis")
 
     with c2:
         st.markdown(dedent("""
@@ -1389,9 +1430,7 @@ if st.session_state.current_page == "home":
         """), unsafe_allow_html=True)
 
         if st.button("📝 Тест засах хэсэг", use_container_width=True, key="home_test_checker_open"):
-            st.markdown(dedent("""
-            <meta http-equiv="refresh" content="0; url=https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html">
-            """), unsafe_allow_html=True)
+            go_page("test_checker")
 
     with c3:
         st.markdown(dedent("""
