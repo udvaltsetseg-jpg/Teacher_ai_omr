@@ -1056,12 +1056,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                     index=False,
                 )
 
-            st.download_button(
-                "⬇️ Download LXP Ready Excel",
-                data=output.getvalue(),
-                file_name="LXP_READY.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
+           
 
         else:
             st.info("LXP-д оруулах Excel файлаа upload хийнэ үү.")
