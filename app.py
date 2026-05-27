@@ -1339,6 +1339,57 @@ else:
         if st.button("🏠 Нүүр хуудас", use_container_width=True, key="landing_home_btn"):
             go_page("home")
 
+
+if st.session_state.current_page == "assignment_analysis":
+    st.markdown("## 📊 Даалгаврын анализ")
+    st.caption("Grade Viewer системийн даалгаврын анализ хэсэг.")
+
+    back_col, open_col = st.columns([1, 1])
+    with back_col:
+        if st.button("⬅️ Нүүр хуудас руу буцах", use_container_width=True, key="back_home_from_assignment"):
+            st.session_state.teacher_ai_mode = False
+            go_page("home")
+    with open_col:
+        st.link_button(
+            "🔗 Шинэ tab дээр нээх",
+            "https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html",
+            use_container_width=True,
+        )
+
+    components.iframe(
+        "https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html",
+        height=950,
+        scrolling=True,
+    )
+
+    st.stop()
+
+
+if st.session_state.current_page == "test_checker":
+    st.markdown("## 📝 Тест засах")
+    st.caption("Grade Viewer системийн тест засах хэсэг.")
+
+    back_col, open_col = st.columns([1, 1])
+    with back_col:
+        if st.button("⬅️ Нүүр хуудас руу буцах", use_container_width=True, key="back_home_from_test_checker"):
+            st.session_state.teacher_ai_mode = False
+            go_page("home")
+    with open_col:
+        st.link_button(
+            "🔗 Шинэ tab дээр нээх",
+            "https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html",
+            use_container_width=True,
+        )
+
+    components.iframe(
+        "https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html",
+        height=950,
+        scrolling=True,
+    )
+
+    st.stop()
+
+
 if st.session_state.current_page == "home":
 
     st.markdown(dedent("""
