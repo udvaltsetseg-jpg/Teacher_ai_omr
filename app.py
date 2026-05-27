@@ -470,8 +470,8 @@ def create_lxp_extension_zip():
     manifest_json = {
         "manifest_version": 3,
         "name": "NEST Teacher AI LXP Connector",
-        "version": "1.2",
-        "description": "Streamlit Batch JSON-г LXP рүү автоматаар бөглөх connector.",
+        "version": "1.3",
+        "description": "Streamlit Batch JSON-г автоматаар хадгалж, LXP дээр нэг товчоор бөглөх connector.",
         "permissions": ["tabs", "scripting", "storage", "activeTab"],
         "host_permissions": [
             "http://localhost:8501/*",
@@ -516,17 +516,10 @@ def create_lxp_extension_zip():
   <div class="card">
     <h2>NEST LXP Connector</h2>
     <p class="hint">
-      Streamlit дээр SEND ALL TO LXP дарсан Batch JSON-г хадгалж, LXP page дээр автоматаар бөглөнө.
+      Teacher AI OMR дээр Batch List гарсан бол энэ товчийг дарахад LXP дээр шууд бөглөгдөнө.
     </p>
 
-    <button id="fillLatestBtn">FILL LXP NOW</button>
-    <button id="pasteModeBtn" class="secondary">JSON paste mode</button>
-
-    <div id="pasteBox" style="display:none;">
-      <label>Batch JSON</label>
-      <textarea id="jsonInput" placeholder='[{"code":"NEST25001","name":"Сурагч","score":85}]'></textarea>
-      <button id="fillPasteBtn">SEND TO LXP</button>
-    </div>
+    <button id="fillLatestBtn">AUTO FILL LXP</button>
 
     <div id="status"></div>
   </div>
@@ -535,13 +528,9 @@ def create_lxp_extension_zip():
 </html>
 """
 
-    style_css = """body{width:360px;margin:0;font-family:Arial,sans-serif;background:#EEF3FF;color:#111827}.card{padding:16px}h2{margin:0 0 8px 0;font-size:20px}.hint{font-size:12px;color:#6B7280;line-height:1.5}button{width:100%;border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;background:#16A085;color:white;margin-top:8px}button.secondary{background:#334155}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}textarea{width:100%;height:160px;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:12px;padding:10px;font-size:12px}#status{margin-top:10px;font-size:12px;border-radius:10px;padding:8px;display:none;line-height:1.4}"""
+    style_css = """body{width:340px;margin:0;font-family:Arial,sans-serif;background:#EEF3FF;color:#111827}.card{padding:16px}h2{margin:0 0 8px 0;font-size:20px}.hint{font-size:12px;color:#6B7280;line-height:1.5}button{width:100%;border:none;border-radius:12px;padding:14px;font-weight:800;cursor:pointer;background:#16A085;color:white;margin-top:10px;font-size:15px}#status{margin-top:12px;font-size:12px;border-radius:10px;padding:10px;display:none;line-height:1.45}"""
 
     popup_js = """const fillLatestBtn = document.getElementById("fillLatestBtn");
-const pasteModeBtn = document.getElementById("pasteModeBtn");
-const pasteBox = document.getElementById("pasteBox");
-const jsonInput = document.getElementById("jsonInput");
-const fillPasteBtn = document.getElementById("fillPasteBtn");
 const statusBox = document.getElementById("status");
 
 function showStatus(message, isError=false) {
@@ -551,8 +540,8 @@ function showStatus(message, isError=false) {
   statusBox.textContent = message;
 }
 
-function fillPayload(payload) {
-  chrome.runtime.sendMessage({ action: "FILL_LXP", payload }, (response) => {
+fillLatestBtn.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ action: "FILL_LXP_LATEST" }, (response) => {
     if (chrome.runtime.lastError) {
       showStatus(chrome.runtime.lastError.message, true);
       return;
@@ -561,40 +550,8 @@ function fillPayload(payload) {
     if (response && response.ok) {
       showStatus(`Амжилттай: ${response.filled} мөр. Алгассан: ${response.skipped} мөр.`);
     } else {
-      showStatus(response?.message || "Алдаа гарлаа.", true);
+      showStatus(response?.message || "Алдаа гарлаа. Teacher AI OMR дээр Batch List үүсгээд дахин дарна уу.", true);
     }
-  });
-}
-
-fillLatestBtn.addEventListener("click", () => {
-  chrome.storage.local.get(["latestPayload"], (result) => {
-    const payload = result.latestPayload || [];
-
-    if (!Array.isArray(payload) || payload.length === 0) {
-      showStatus("Хадгалагдсан Batch JSON алга. Эхлээд Streamlit дээр SEND ALL TO LXP дар эсвэл JSON paste mode ашигла.", true);
-      return;
-    }
-
-    fillPayload(payload);
-  });
-});
-
-pasteModeBtn.addEventListener("click", () => {
-  pasteBox.style.display = pasteBox.style.display === "none" ? "block" : "none";
-});
-
-fillPasteBtn.addEventListener("click", () => {
-  let payload;
-  try {
-    payload = JSON.parse(jsonInput.value);
-    if (!Array.isArray(payload)) throw new Error("JSON нь array байх ёстой.");
-  } catch (e) {
-    showStatus("JSON буруу байна: " + e.message, true);
-    return;
-  }
-
-  chrome.storage.local.set({ latestPayload: payload }, () => {
-    fillPayload(payload);
   });
 });
 """
@@ -611,12 +568,23 @@ window.addEventListener("message", (event) => {
     event.data.source === "TEACHER_AI";
 
   if (!validSource) return;
-  if (event.data.action !== "SEND_TO_LXP") return;
 
-  chrome.runtime.sendMessage({
-    action: "SAVE_AND_FILL_LXP",
-    payload: event.data.payload
-  });
+  // Batch list гармагц Streamlit app-аас payload автоматаар хадгална.
+  if (event.data.action === "SAVE_LXP_PAYLOAD") {
+    chrome.runtime.sendMessage({
+      action: "SAVE_LXP_PAYLOAD",
+      payload: event.data.payload
+    });
+    return;
+  }
+
+  // SEND ALL TO LXP дарвал шууд хадгалаад LXP рүү бөглөнө.
+  if (event.data.action === "SEND_TO_LXP") {
+    chrome.runtime.sendMessage({
+      action: "SAVE_AND_FILL_LXP",
+      payload: event.data.payload
+    });
+  }
 });
 
 chrome.runtime.onMessage.addListener((message) => {
@@ -655,7 +623,7 @@ function fillLxp(payload, sendResponse) {
         ok: false,
         message: "LXP tab олдсонгүй. Эхлээд LXP дүн оруулах page нээнэ үү.",
         filled: 0,
-        skipped: payload.length,
+        skipped: Array.isArray(payload) ? payload.length : 0,
         errors: [{ code: "-", score: "", message: "LXP tab олдсонгүй" }]
       };
       sendStatus(result);
@@ -677,7 +645,7 @@ function fillLxp(payload, sendResponse) {
             ok: false,
             message: "LXP page refresh хийгээд дахин оролдоно уу. " + chrome.runtime.lastError.message,
             filled: 0,
-            skipped: payload.length,
+            skipped: Array.isArray(payload) ? payload.length : 0,
             errors: [{ code: "-", score: "", message: chrome.runtime.lastError.message }]
           };
           sendStatus(result);
@@ -705,22 +673,46 @@ function fillLxp(payload, sendResponse) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!message) return;
 
+  if (message.action === "SAVE_LXP_PAYLOAD") {
+    const payload = message.payload || [];
+
+    chrome.storage.local.set({ latestPayload: payload }, () => {
+      console.log("✅ Payload auto-saved from Streamlit:", payload);
+      if (sendResponse) {
+        sendResponse({ ok: true, message: "payload saved", count: payload.length });
+      }
+    });
+
+    return true;
+  }
+
   if (message.action === "SAVE_AND_FILL_LXP") {
     const payload = message.payload || [];
 
     chrome.storage.local.set({ latestPayload: payload }, () => {
-      console.log("✅ Payload saved from Streamlit:", payload);
+      console.log("✅ Payload saved and filling:", payload);
       fillLxp(payload, sendResponse);
     });
 
     return true;
   }
 
-  if (message.action === "FILL_LXP") {
-    const payload = message.payload || [];
+  if (message.action === "FILL_LXP_LATEST") {
+    chrome.storage.local.get(["latestPayload"], (result) => {
+      const payload = result.latestPayload || [];
 
-    chrome.storage.local.set({ latestPayload: payload }, () => {
-      console.log("✅ Payload saved from popup:", payload);
+      if (!Array.isArray(payload) || payload.length === 0) {
+        const noPayload = {
+          ok: false,
+          message: "Хадгалагдсан Batch JSON алга. Teacher AI OMR дээр Batch List үүсгээд page refresh эсвэл SEND ALL TO LXP дарна уу.",
+          filled: 0,
+          skipped: 0,
+          errors: []
+        };
+        if (sendResponse) sendResponse(noPayload);
+        return;
+      }
+
       fillLxp(payload, sendResponse);
     });
 
@@ -806,7 +798,6 @@ function findScoreInputInRow(row) {
   });
 
   if (editable.length === 0) return null;
-
   return editable[editable.length - 1];
 }
 
@@ -880,35 +871,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 """
 
-    readme_md = """# NEST Teacher AI LXP Connector v1.2
-
-## Суулгах
-1. ZIP файлыг татаж аваад задлана.
-2. Chrome дээр `chrome://extensions` нээнэ.
-3. Developer mode ON.
-4. Load unpacked.
-5. Задалсан `nest_lxp_connector_click_fill` folder сонгоно.
-6. Chrome дээр Relaunch to update гарвал дарна.
+    readme_md = """# NEST Teacher AI LXP Connector v1.3
 
 ## Ашиглах
-1. LXP дүн оруулах page нээнэ.
-2. Teacher AI OMR app дээр Batch List үүсгэнэ.
-3. SEND ALL TO LXP дарна.
-4. Extension LXP tab руу шилжээд автоматаар бөглөнө.
+1. Teacher AI OMR app дээр Batch List үүсгэнэ.
+2. Batch List гарсан үед payload автоматаар extension-д хадгалагдана.
+3. LXP дүн оруулах page нээнэ.
+4. Extension icon → AUTO FILL LXP дарна.
+5. Дүн шууд бөглөгдөнө.
 
-## Нэмэлт
-Extension icon → FILL LXP NOW дарвал хамгийн сүүлд хадгалсан batch-аар дахин бөглөнө.
+## SEND ALL TO LXP
+Streamlit дээр SEND ALL TO LXP дарвал мөн шууд хадгалаад LXP рүү бөглөнө.
+
+## Validation
+- 0–100 хоорондох тоон дүнг бөглөнө.
+- Үсгэн дүн, хоосон дүн, 100-аас их дүнг алгасна.
 """
 
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr("nest_lxp_connector_click_fill/manifest.json", json.dumps(manifest_json, ensure_ascii=False, indent=2))
-        zf.writestr("nest_lxp_connector_click_fill/popup.html", popup_html)
-        zf.writestr("nest_lxp_connector_click_fill/style.css", style_css)
-        zf.writestr("nest_lxp_connector_click_fill/popup.js", popup_js)
-        zf.writestr("nest_lxp_connector_click_fill/streamlit_content.js", streamlit_content_js)
-        zf.writestr("nest_lxp_connector_click_fill/background.js", background_js)
-        zf.writestr("nest_lxp_connector_click_fill/lxp_content.js", lxp_content_js)
-        zf.writestr("nest_lxp_connector_click_fill/README.md", readme_md)
+        zf.writestr("nest_lxp_autofill_connector/manifest.json", json.dumps(manifest_json, ensure_ascii=False, indent=2))
+        zf.writestr("nest_lxp_autofill_connector/popup.html", popup_html)
+        zf.writestr("nest_lxp_autofill_connector/style.css", style_css)
+        zf.writestr("nest_lxp_autofill_connector/popup.js", popup_js)
+        zf.writestr("nest_lxp_autofill_connector/streamlit_content.js", streamlit_content_js)
+        zf.writestr("nest_lxp_autofill_connector/background.js", background_js)
+        zf.writestr("nest_lxp_autofill_connector/lxp_content.js", lxp_content_js)
+        zf.writestr("nest_lxp_autofill_connector/README.md", readme_md)
 
     buffer.seek(0)
     return buffer
@@ -945,7 +933,7 @@ with st.sidebar:
     st.download_button(
         label="⬇️ LXP Connector татах",
         data=lxp_extension_zip.getvalue(),
-        file_name="nest_lxp_connector_click_fill.zip",
+        file_name="nest_lxp_autofill_connector.zip",
         mime="application/zip",
         help="ZIP-г татаж аваад задлаад Chrome → Extensions → Load unpacked ашиглан суулгана."
     )
@@ -956,8 +944,8 @@ with st.sidebar:
 2. Chrome дээр `chrome://extensions` нээнэ.  
 3. `Developer mode` асаана.  
 4. `Load unpacked` дарна.  
-5. Задалсан `nest_lxp_connector_click_fill` folder-ийг сонгоно.  
-6. LXP page нээгээд Streamlit дээр SEND ALL TO LXP дарна.  
+5. Задалсан `nest_lxp_autofill_connector` folder-ийг сонгоно.  
+6. LXP page нээгээд extension icon → AUTO FILL LXP дарна.  
 """)
 
 
@@ -1127,6 +1115,13 @@ if app_mode == "📁 Бэлэн Excel → LXP":
         payload_json = json.dumps(st.session_state.batch_results, ensure_ascii=False)
         components.html(
             f"""
+<script>
+window.parent.postMessage({{
+    source: "NEST_TEACHER_AI",
+    action: "SAVE_LXP_PAYLOAD",
+    payload: {payload_json}
+}}, "*");
+</script>
 <button onclick="sendAllToLXP()"
     style="
         background:#16a085;
@@ -1729,6 +1724,13 @@ ChatGPT AI зөвлөмж:
         payload_json = json.dumps(st.session_state.batch_results, ensure_ascii=False)
         components.html(
             f"""
+<script>
+window.parent.postMessage({{
+    source: "NEST_TEACHER_AI",
+    action: "SAVE_LXP_PAYLOAD",
+    payload: {payload_json}
+}}, "*");
+</script>
 <button onclick="sendAllToLXP()"
     style="
         background:#16a085;
