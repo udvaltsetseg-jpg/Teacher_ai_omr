@@ -1030,7 +1030,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     readme_md = """# Teacher AI LXP Connector v1.5
 
 ## Workflow
-1. Streamlit дээр Batch List үүсгэнэ.
+1. Streamlit дээр Дүнгийн багц үүсгэнэ.
 2. SEND ALL TO LXP дарна. Энэ үед JSON clipboard руу copy болно.
 3. LXP tab дээр extension icon → AUTO FILL LXP дарна.
 4. Extension clipboard/storage-оос JSON уншаад LXP дээр бөглөнө.
@@ -1071,7 +1071,7 @@ with st.sidebar:
     if st.button("🏠 Нүүр хуудас", use_container_width=True, key="sidebar_home_btn"):
         go_page("home")
 
-    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True, key="sidebar_excel_btn"):
+    if st.button("📁 Бэлэн Excel → Дүнгийн багц үүсгэх", use_container_width=True, key="sidebar_excel_btn"):
         go_page("excel")
 
     if st.button("📷 Хариултын хуудас засах", use_container_width=True, key="sidebar_omr_btn"):
@@ -1090,7 +1090,7 @@ if st.session_state.current_page == "home":
     <div class="hero-eyebrow">NEST Teacher AI OMR • LXP workflow</div>
     <h1 class="hero-title">Шалгалт засах, Bloom шинжилгээ хийх, LXP рүү дүн оруулах ажлыг нэг дор</h1>
     <p class="hero-subtitle">
-        Бэлэн Excel дүнгээ Batch List болгох, answer sheet зураг засах, эцэг эхийн тайлан гаргах,
+        Бэлэн Excel дүнгээ дүнгийн багц болгох, answer sheet зураг засах, эцэг эхийн тайлан гаргах,
         мөн Chrome extension ашиглан LXP рүү оноог автоматаар бөглөхөд зориулагдсан багшийн AI туслах систем.
     </p>
     <div class="hero-badges">
@@ -1177,7 +1177,7 @@ if st.session_state.current_page == "home":
         if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn_2"):
             go_page("extension")
 
-    st.markdown('<div class="section-title">Ашиглах хамгийн энгийн дараалал</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Ашиглах дараалал</div>', unsafe_allow_html=True)
 
     step_col, info_col = st.columns([1.35, 1])
 
@@ -1188,7 +1188,7 @@ if st.session_state.current_page == "home":
         <div class="step-num">1</div>
         <div class="step-text">
             <b>Excel дүн бэлэн бол</b> “Бэлэн Excel дүн → Batch” хэсэгт орж файл upload хийнэ.
-            Хэрвээ answer sheet зураг засах бол “Хариултын хуудас засах” хэсгийг сонгоно.
+            Хэрвээ хариултын хуудасны зураг засах бол “Хариултын хуудас засах” хэсгийг сонгоно.
         </div>
     </div>
     <div class="step-row">
@@ -1219,7 +1219,7 @@ if st.session_state.current_page == "home":
     <h4>✅ Систем юуг хөнгөвчлөх вэ?</h4>
     <p>
         • Excel-ээс LXP рүү гараар шивэх хугацааг багасгана.<br>
-        • OMR шалгалтын preliminary grading хийнэ.<br>
+        • OMR шалгалтын урьдчилсан үнэлгээ хийнэ.<br>
         • Bloom түвшний гүйцэтгэлийг харуулна.<br>
         • Багш эцсийн засвар хийсний дараа тайлан, batch үүсгэнэ.
     </p>
@@ -1241,7 +1241,7 @@ if st.session_state.current_page == "home":
 
 if st.session_state.current_page == "answer_sheet":
     st.markdown("## 📝 Хариултын хуудас татах")
-    st.caption("Асуултын тоогоо сонгоод OMR answer sheet PDF татна.")
+    st.caption("Асуултын тоогоо сонгоод OMR хариултын хуудас PDF татна.")
 
     with st.container(border=True):
         page_q_count = st.number_input(
@@ -1263,7 +1263,7 @@ if st.session_state.current_page == "answer_sheet":
             use_container_width=True,
         )
 
-        st.info("PDF-ийг хэвлээд сурагчдаар A/B/C/D bubble бөглүүлнэ.")
+        st.info("PDF-ийг хэвлээд сурагчдаар A/B/C/D хариулт будуулна.")
 
     if st.button("⬅️ Нүүр хуудас руу буцах"):
         go_page("home")
@@ -1364,7 +1364,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
     if st.button("⬅️ Нүүр хуудас руу буцах", key="back_excel"):
         go_page("home")
 
-    st.markdown("## 📁 Бэлэн Excel дүн → Batch үүсгэх")
+    st.markdown("## 📁 Бэлэн Excel дүн → Дүнгийн багц үүсгэх")
 
     with st.container(border=True):
         lxp_excel = st.file_uploader(
@@ -1424,7 +1424,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
             add_col, clear_col = st.columns([1, 1])
 
             with add_col:
-                if st.button("➕ Excel-с Batch List рүү нэмэх", key="direct_add_excel_to_batch"):
+                if st.button("➕ Excel-с Дүнгийн багцруу нэмэх", key="direct_add_excel_to_batch"):
                     added_count = 0
                     skipped_count = 0
 
@@ -1457,13 +1457,13 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                             added_count += 1
 
                     st.success(
-                        f"{added_count} сурагч Batch List-д нэмэгдлээ. "
+                        f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
                         f"{skipped_count} мөр алгасагдлаа."
                     )
                     st.rerun()
 
             with clear_col:
-                if st.button("🧹 Batch List цэвэрлэх", key="direct_clear_batch_top"):
+                if st.button("🧹 Дүнгийн багц цэвэрлэх", key="direct_clear_batch_top"):
                     st.session_state.batch_results = []
                     st.rerun()
 
@@ -1480,7 +1480,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
         else:
             st.info("LXP-д оруулах Excel файлаа upload хийнэ үү.")
 
-    st.subheader("📋 Batch List / LXP Fill")
+    st.subheader("📋 Дүнгийн багц / LXP Fill")
 
     if len(st.session_state.batch_results) > 0:
         batch_df = pd.DataFrame(st.session_state.batch_results)
@@ -1535,7 +1535,7 @@ async function sendAllToLXP(){{
     }}
 
     postToExtension("SEND_TO_LXP");
-    alert("Batch list clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
+    alert("Дүнгийн багц хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
 }}
 </script>
 """,
@@ -1546,7 +1546,7 @@ async function sendAllToLXP(){{
             st.session_state.batch_results = []
             st.rerun()
     else:
-        st.info("Batch list хоосон байна.")
+        st.info("Дүнгийн багц хоосон байна.")
 
 if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and answer_img:
 
@@ -1984,18 +1984,18 @@ ChatGPT AI зөвлөмж:
         mime="application/pdf",
     )
 
-    st.subheader("8. Add to Batch")
+    st.subheader("8. Дүнгийн багц үүсгэх")
 
-    if st.button("ADD TO BATCH"):
+    if st.button("Дүнгийн багц үүсгэх"):
         exists = any(x["code"] == student_code for x in st.session_state.batch_results)
         if exists:
-            st.warning("Энэ сурагч batch list-д байна.")
+            st.warning("Энэ сурагч Дүнгийн багцад нэмэгдсэн байна.")
         else:
             st.session_state.batch_results.append({"code": student_code, "name": student_name, "score": percent})
-            st.success("Batch list-д нэмэгдлээ.")
+            st.success("Дүнгийн багцад нэмэгдлээ.")
 
 
-    st.subheader("9. Batch List / LXP Fill")
+    st.subheader("9. Дүнгийн багц / LXP Fill")
 
     # ============================================
     # LXP EXCEL MAPPING
@@ -2058,7 +2058,7 @@ ChatGPT AI зөвлөмж:
                 use_container_width=True
             )
 
-            if st.button("➕ Excel-с Batch List рүү нэмэх", key="add_excel_to_batch"):
+            if st.button("➕ Excel-с Дүнгийн багцруу нэмэх", key="add_excel_to_batch"):
                 added_count = 0
                 skipped_count = 0
 
@@ -2087,7 +2087,7 @@ ChatGPT AI зөвлөмж:
                         added_count += 1
 
                 st.success(
-                    f"{added_count} сурагч Batch List-д нэмэгдлээ. "
+                    f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
                     f"{skipped_count} давхардсан сурагч алгасагдлаа."
                 )
                 st.rerun()
@@ -2165,7 +2165,7 @@ async function sendAllToLXP(){{
     }}
 
     postToExtension("SEND_TO_LXP");
-    alert("Batch list clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
+    alert("Дүнгийн багц clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
 }}
 </script>
 """,
@@ -2176,7 +2176,7 @@ async function sendAllToLXP(){{
             st.session_state.batch_results = []
             st.rerun()
     else:
-        st.info("Batch list хоосон байна.")
+        st.info("Дүнгийн багц хоосон байна.")
 elif app_mode == "📷 OMR шалгалт засах → LXP":
     if st.button("⬅️ Нүүр хуудас руу буцах", key="back_omr_empty"):
         go_page("home")
