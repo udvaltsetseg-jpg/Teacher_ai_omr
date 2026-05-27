@@ -389,7 +389,7 @@ st.markdown(dedent("""
     background:
         linear-gradient(90deg, rgba(255,245,235,.96) 0%, rgba(240,247,255,.92) 44%, rgba(219,234,254,.30) 100%),
         url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1800&auto=format&fit=crop");
-    background-size:cover;
+    
     background-position:center right;
 }
 
@@ -1415,6 +1415,14 @@ if st.session_state.current_page == "test_checker":
 
     st.stop()
 
+
+
+
+
+
+
+st.markdown(dedent("""
+<style>
 .feature-image{
     width:90px;
     height:90px;
@@ -1441,6 +1449,10 @@ if st.session_state.current_page == "test_checker":
 .img-ai{
     background-image:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop");
 }
+</style>
+"""), unsafe_allow_html=True)
+
+
 if st.session_state.current_page == "home":
 
     st.markdown(dedent("""
@@ -1465,7 +1477,7 @@ if st.session_state.current_page == "home":
     with c1:
         st.markdown(dedent("""
         <div class="feature-card">
-           <div class="feature-image img-analysis"></div>
+            <div class="feature-image img-analysis"></div>
             <div class="feature-title">Даалгаврын анализ</div>
             <div class="feature-text">
                 Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
@@ -2149,9 +2161,9 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
         html = """
 <style>
 body{font-family:Arial,sans-serif;padding:14px;}
-.rule-card{background:#ffffff;padding:28px;border-radius:20px;border:1px solid #E5E7EB;}
+.rule-card{background:#ffffff;padding:28px;border:1px solid #E5E7EB;}
 .rule-title{font-size:26px;font-weight:800;color:#111827;margin-bottom:16px;}
-.rule-warning{background:#FEF3C7;color:#92400E;padding:14px;border-radius:12px;margin-bottom:18px;font-weight:700;}
+.rule-warning{background:#FEF3C7;color:#92400E;padding:14px;border-radius:12px;font-weight:700;}
 .rule-badge{display:inline-block;background:#EEF2FF;color:#4338CA;padding:8px 14px;border-radius:10px;margin:5px;font-weight:700;font-size:15px;}
 .rule-info{background:#EFF6FF;color:#1D4ED8;padding:18px;border-radius:14px;margin-top:18px;line-height:1.9;font-size:16px;max-height:120px;overflow-y:auto;}
 .rule-info::-webkit-scrollbar{width:8px;}
