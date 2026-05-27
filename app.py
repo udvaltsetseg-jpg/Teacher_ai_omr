@@ -548,6 +548,149 @@ st.markdown(dedent("""
 </style>
 """), unsafe_allow_html=True)
 
+
+st.markdown(dedent("""
+<style>
+/* =============== GRADE VIEWER STYLE HOME OVERRIDE =============== */
+
+.gv-home-wrap{
+    background:#f4f7f6;
+    border-radius:0;
+    padding:0 0 44px 0;
+}
+
+.gv-hero{
+    position:relative;
+    width:100%;
+    min-height:310px;
+    border-radius:0;
+    overflow:hidden;
+    margin:0 0 52px 0;
+    background:
+        linear-gradient(rgba(15,23,42,.18), rgba(15,23,42,.18)),
+        url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1800&auto=format&fit=crop");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.gv-hero-title{
+    color:white;
+    font-size:52px;
+    font-weight:500;
+    text-align:center;
+    letter-spacing:-.02em;
+    text-shadow:0 8px 22px rgba(0,0,0,.28);
+}
+
+.gv-card-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+    max-width:1280px;
+    margin:0 auto;
+    padding:0 18px;
+}
+
+.gv-card{
+    background:white;
+    border-radius:16px;
+    min-height:330px;
+    padding:34px 28px 26px 28px;
+    text-align:center;
+    box-shadow:0 18px 40px rgba(15,23,42,.08);
+    border:1px solid rgba(226,232,240,.9);
+    transition:all .22s ease;
+}
+
+.gv-card:hover{
+    transform:translateY(-7px);
+    box-shadow:0 26px 54px rgba(15,23,42,.13);
+}
+
+.gv-img{
+    width:106px;
+    height:106px;
+    border-radius:999px;
+    margin:0 auto 24px auto;
+    border:3px solid #2699f2;
+    background-size:cover;
+    background-position:center;
+}
+
+.gv-img-1{
+    background-image:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=500&auto=format&fit=crop");
+}
+
+.gv-img-2{
+    background-image:url("https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=500&auto=format&fit=crop");
+}
+
+.gv-img-3{
+    background-image:url("https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=500&auto=format&fit=crop");
+}
+
+.gv-img-4{
+    background-image:url("https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=500&auto=format&fit=crop");
+}
+
+.gv-card-title{
+    font-size:26px;
+    font-weight:900;
+    color:#26374a;
+    margin-bottom:14px;
+    line-height:1.25;
+}
+
+.gv-card-text{
+    color:#7a8790;
+    font-size:16px;
+    line-height:1.7;
+    min-height:88px;
+}
+
+.gv-home-button-row .stButton > button{
+    background:#ffffff !important;
+    color:#26374a !important;
+    border:1px solid #e5e7eb !important;
+    border-radius:14px !important;
+    min-height:50px !important;
+    font-weight:800 !important;
+    box-shadow:0 12px 26px rgba(15,23,42,.06);
+}
+
+.gv-home-button-row .stButton > button:hover{
+    border-color:#2699f2 !important;
+    color:#2699f2 !important;
+    transform:translateY(-2px);
+}
+
+@media(max-width:1200px){
+    .gv-card-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .gv-hero-title{
+        font-size:42px;
+    }
+}
+
+@media(max-width:700px){
+    .gv-card-grid{
+        grid-template-columns:1fr;
+    }
+    .gv-hero{
+        min-height:240px;
+    }
+    .gv-hero-title{
+        font-size:34px;
+    }
+}
+</style>
+"""), unsafe_allow_html=True)
+
+
 if "batch_results" not in st.session_state:
     st.session_state.batch_results = []
 if "final_ai_recommendation" not in st.session_state:
@@ -1419,84 +1562,82 @@ if st.session_state.current_page == "test_checker":
 if st.session_state.current_page == "home":
 
     st.markdown(dedent("""
-    <div class="dashboard-hero">
-        <div class="dashboard-hero-content">
-            <div class="dashboard-title">Багшийн Туслах Систем</div>
-            <div class="dashboard-subtitle">
-                Teacher AI OMR • LXP AutoFill • Bloom Analytics • AI Reports
-            </div>
-            <div>
-                <span class="dashboard-badge badge-pink">AI OMR</span>
-                <span class="dashboard-badge badge-blue">Bloom Analytics</span>
-                <span class="dashboard-badge badge-green">PDF Report</span>
-                <span class="dashboard-badge badge-orange">LXP Autofill</span>
+    <div class="gv-home-wrap">
+
+        <div class="gv-hero">
+            <div class="gv-hero-title">
+                Багшийн Туслах Систем
             </div>
         </div>
+
+        <div class="gv-card-grid">
+
+            <div class="gv-card">
+                <div class="gv-img gv-img-1"></div>
+                <div class="gv-card-title">Даалгаврын анализ</div>
+                <div class="gv-card-text">
+                    Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон
+                    даалгаврын анализ харах хэсэг.
+                </div>
+            </div>
+
+            <div class="gv-card">
+                <div class="gv-img gv-img-2"></div>
+                <div class="gv-card-title">Тест засах</div>
+                <div class="gv-card-text">
+                    OMR хариултын хуудас зураг upload хийж AI ашиглан
+                    шалгалт засах хэсэг.
+                </div>
+            </div>
+
+            <div class="gv-card">
+                <div class="gv-img gv-img-3"></div>
+                <div class="gv-card-title">Хичээлийн төлөвлөгөө</div>
+                <div class="gv-card-text">
+                    Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл
+                    боловсруулах хэсэг.
+                </div>
+            </div>
+
+            <div class="gv-card">
+                <div class="gv-img gv-img-4"></div>
+                <div class="gv-card-title">Teacher AI OMR</div>
+                <div class="gv-card-text">
+                    Phone Camera → AI Grading → Bloom Analytics →
+                    Parent Report → LXP AutoFill workflow.
+                </div>
+            </div>
+
+        </div>
+
     </div>
     """), unsafe_allow_html=True)
+
+    st.markdown('<div class="gv-home-button-row">', unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-        st.markdown(dedent("""
-        <div class="feature-card">
-            <div class="feature-icon green">📊</div>
-            <div class="feature-title">Даалгаврын анализ</div>
-            <div class="feature-text">
-                Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
-            </div>
-        </div>
-        """), unsafe_allow_html=True)
-
         if st.button("📊 Даалгаврын анализ нээх", use_container_width=True, key="home_assignment_analysis_open"):
             go_page("assignment_analysis")
 
     with c2:
-        st.markdown(dedent("""
-        <div class="feature-card">
-            <div class="feature-icon blue">📝</div>
-            <div class="feature-title">Тест засах</div>
-            <div class="feature-text">
-                OMR хариултын хуудас зураг upload хийж AI ашиглан шалгалт засах хэсэг.
-            </div>
-        </div>
-        """), unsafe_allow_html=True)
-
         if st.button("📝 Тест засах хэсэг", use_container_width=True, key="home_test_checker_open"):
             go_page("test_checker")
 
     with c3:
-        st.markdown(dedent("""
-        <div class="feature-card">
-            <div class="feature-icon yellow">📚</div>
-            <div class="feature-title">Хичээлийн төлөвлөгөө</div>
-            <div class="feature-text">
-                Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл боловсруулах хэсэг.
-            </div>
-        </div>
-        """), unsafe_allow_html=True)
-
         if st.button("📚 Хичээлийн төлөвлөгөө", use_container_width=True, key="home_lesson_plan_open"):
             st.markdown(dedent("""
             <meta http-equiv="refresh" content="0; url=https://example.com/lesson-plan">
             """), unsafe_allow_html=True)
 
     with c4:
-        st.markdown(dedent("""
-        <div class="feature-card">
-            <div class="feature-icon purple">🤖</div>
-            <div class="feature-title">Teacher AI OMR</div>
-            <div class="feature-text">
-                Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP AutoFill workflow.
-            </div>
-        </div>
-        """), unsafe_allow_html=True)
-
         if st.button("🤖 Teacher AI OMR нээх", use_container_width=True, key="home_teacher_ai_omr_open"):
             st.session_state.teacher_ai_mode = True
             go_page("teacher_ai_home")
 
-   
+    st.markdown('</div>', unsafe_allow_html=True)
+
     st.stop()
 
 
@@ -1577,6 +1718,45 @@ if st.session_state.current_page == "teacher_ai_home":
         """), unsafe_allow_html=True)
         if st.button("🧩 Extension хэсэг", use_container_width=True, key="teacher_ai_extension_open"):
             go_page("extension")
+
+
+    st.markdown(dedent("""
+    <div class="dashboard-guide">
+
+        <div class="guide-heading">
+            🚀 Ашиглах хамгийн энгийн дараалал
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">1</div>
+            <div class="guide-text">
+                Excel файл upload хийж дүнгийн багц (Batch List) үүсгэнэ.
+            </div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">2</div>
+            <div class="guide-text">
+                OMR answer sheet зураг upload хийж AI grading хийнэ.
+            </div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">3</div>
+            <div class="guide-text">
+                SEND ALL TO LXP дарж Batch JSON үүсгэнэ.
+            </div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">4</div>
+            <div class="guide-text">
+                LXP Extension → AUTO FILL LXP дарж автоматаар бөглөнө.
+            </div>
+        </div>
+
+    </div>
+    """), unsafe_allow_html=True)
 
     st.stop()
 
