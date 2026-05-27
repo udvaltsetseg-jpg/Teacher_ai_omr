@@ -1068,19 +1068,19 @@ with st.sidebar:
     st.divider()
     st.subheader("Үндсэн цэс")
 
-    if st.button("🏠 Нүүр хуудас", use_container_width=True):
+    if st.button("🏠 Нүүр хуудас", use_container_width=True, key="sidebar_home_btn"):
         go_page("home")
 
-    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
+    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True, key="sidebar_excel_btn"):
         go_page("excel")
 
-    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
+    if st.button("📷 Хариултын хуудас засах", use_container_width=True, key="sidebar_omr_btn"):
         go_page("omr")
 
-    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
+    if st.button("📝 Хариултын хуудас татах", use_container_width=True, key="sidebar_answer_sheet_btn"):
         go_page("answer_sheet")
 
-    if st.button("🧩 Extension татах", use_container_width=True):
+    if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
         go_page("extension")
 
 
@@ -1121,7 +1121,7 @@ if st.session_state.current_page == "home":
     <span class="workflow-tag">LXP-ready</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📁 Excel дүнгээ оруулах", use_container_width=True, type="primary"):
+        if st.button("📁 Excel дүнгээ оруулах", use_container_width=True, type="primary", key="home_excel_open_btn"):
             go_page("excel")
 
     with c2:
@@ -1138,7 +1138,7 @@ if st.session_state.current_page == "home":
     <span class="workflow-tag">Bloom report</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📷 Answer sheet засах", use_container_width=True, type="primary"):
+        if st.button("📷 Answer sheet засах", use_container_width=True, type="primary", key="home_omr_open_btn"):
             go_page("omr")
 
     c3, c4 = st.columns(2)
@@ -1157,7 +1157,7 @@ if st.session_state.current_page == "home":
     <span class="workflow-tag">Printable</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📝 Answer sheet PDF татах", use_container_width=True):
+        if st.button("📝 Answer sheet PDF татах", use_container_width=True, key="home_answer_sheet_open_btn"):
             go_page("answer_sheet")
 
     with c4:
@@ -1174,7 +1174,7 @@ if st.session_state.current_page == "home":
     <span class="workflow-tag">0–100 check</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("🧩 Extension татах", use_container_width=True):
+        if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
             go_page("extension")
 
     st.markdown('<div class="section-title">Ашиглах хамгийн энгийн дараалал</div>', unsafe_allow_html=True)
