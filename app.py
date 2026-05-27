@@ -7,6 +7,7 @@ from openai import OpenAI
 import os
 import json
 from io import BytesIO
+import zipfile
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
@@ -14,9 +15,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 import streamlit.components.v1 as components
 from reportlab.lib import colors
 from reportlab.lib.units import mm
-from docx import Document
-from docx.shared import Pt, Inches
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 import re
 import cv2
 import html as html_lib
@@ -29,38 +27,24 @@ except Exception:
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-
-# ============================================================
-# PDF FONT FIX FOR MONGOLIAN / CYRILLIC
-# Helvetica кирилл дэмжихгүй тул DejaVuSans / Arial Unicode хайж register хийнэ.
-# Streamlit Cloud дээр packages.txt-д fonts-dejavu-core гэж нэмэхэд
-# /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf автоматаар олдоно.
-# ============================================================
-
-PDF_FONT = "Helvetica"
-PDF_FONT_PATH = None
-
 FONT_PATHS = [
-    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
-    "/usr/local/share/fonts/DejaVuSans.ttf",
     "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
     "/System/Library/Fonts/Supplemental/Arial.ttf",
     "/Library/Fonts/Arial Unicode.ttf",
     "/Library/Fonts/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
 ]
+
+PDF_FONT = "Helvetica"
 
 for path in FONT_PATHS:
     if os.path.exists(path):
-        PDF_FONT_PATH = path
-        break
-
-if PDF_FONT_PATH:
-    try:
-        pdfmetrics.registerFont(TTFont("MongolianFont", PDF_FONT_PATH))
-        PDF_FONT = "MongolianFont"
-    except Exception:
-        PDF_FONT = "Helvetica"
+        try:
+            pdfmetrics.registerFont(TTFont("MongolianFont", path))
+            PDF_FONT = "MongolianFont"
+            break
+        except Exception:
+            pass
 
 BLOOM_FULL = {
     "R": "Remember / Санах",
@@ -135,10 +119,6 @@ st.markdown("""
     <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
 </div>
 """, unsafe_allow_html=True)
-
-# PDF font status
-if PDF_FONT == "Helvetica":
-    st.warning("PDF Монгол фонт олдсонгүй. GitHub дээр packages.txt файлд fonts-dejavu-core гэж нэмээд redeploy хийнэ үү.")
 
 if "batch_results" not in st.session_state:
     st.session_state.batch_results = []
@@ -337,85 +317,6 @@ def clean_markdown(text):
     return text.strip()
 
 
-def add_docx_paragraph(document, text, bold=False, font_size=10, space_after=6):
-    p = document.add_paragraph()
-    run = p.add_run(text)
-    run.bold = bold
-    run.font.name = "Arial"
-    run.font.size = Pt(font_size)
-    p.paragraph_format.space_after = Pt(space_after)
-    return p
-
-
-def generate_parent_report_docx(report_text):
-    buffer = BytesIO()
-    document = Document()
-
-    section = document.sections[0]
-    section.top_margin = Inches(0.65)
-    section.bottom_margin = Inches(0.65)
-    section.left_margin = Inches(0.75)
-    section.right_margin = Inches(0.75)
-
-    styles = document.styles
-    styles["Normal"].font.name = "Arial"
-    styles["Normal"].font.size = Pt(10)
-
-    title = document.add_paragraph()
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    title_run = title.add_run("Teacher AI Parent Feedback Report")
-    title_run.bold = True
-    title_run.font.name = "Arial"
-    title_run.font.size = Pt(18)
-
-    document.add_paragraph("")
-
-    report_text = clean_markdown(report_text)
-
-    for raw_line in report_text.split("\n"):
-        line = raw_line.strip()
-
-        if line == "":
-            document.add_paragraph("")
-            continue
-
-        if "====" in line:
-            document.add_paragraph("─" * 60)
-            continue
-
-        if line.startswith("Bloom Analysis") or line.startswith("AI Recommendation"):
-            add_docx_paragraph(document, line, bold=True, font_size=13, space_after=8)
-            continue
-
-        if line.startswith("Сурагчийн код") or line.startswith("Сурагчийн нэр") or line.startswith("Оноо") or line.startswith("Гүйцэтгэл"):
-            add_docx_paragraph(document, line, bold=True, font_size=10, space_after=5)
-            continue
-
-        if line.startswith("-"):
-            p = document.add_paragraph(style=None)
-            p.paragraph_format.left_indent = Inches(0.25)
-            r = p.add_run("• " + line[1:].strip())
-            r.font.name = "Arial"
-            r.font.size = Pt(10)
-            continue
-
-        if re.match(r"^\d+\.", line):
-            add_docx_paragraph(document, line, bold=True, font_size=11, space_after=6)
-            continue
-
-        add_docx_paragraph(document, line, bold=False, font_size=10, space_after=5)
-
-    footer = document.sections[0].footer.paragraphs[0]
-    footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    footer_run = footer.add_run("Generated by Teacher AI OMR")
-    footer_run.font.name = "Arial"
-    footer_run.font.size = Pt(8)
-
-    document.save(buffer)
-    buffer.seek(0)
-    return buffer
-
-
 def draw_wrapped_line(c, text, x, y, max_width, font_name, font_size, line_height):
     words = text.split(" ")
     line = ""
@@ -560,6 +461,86 @@ AI Recommendation / AI зөвлөмж
 """
 
 
+
+def create_lxp_extension_zip():
+    buffer = BytesIO()
+
+    manifest_json = {
+        "manifest_version": 3,
+        "name": "NEST Teacher AI → LXP Filler",
+        "version": "1.0.0",
+        "description": "Teacher AI OMR batch JSON-г LXP page дээр автоматаар бөглөх extension.",
+        "permissions": ["activeTab", "scripting", "storage"],
+        "host_permissions": ["https://lxp.eschool.mn/*"],
+        "content_scripts": [
+            {
+                "matches": ["https://lxp.eschool.mn/*"],
+                "js": ["content.js"],
+                "run_at": "document_idle"
+            }
+        ],
+        "action": {
+            "default_popup": "popup.html",
+            "default_title": "NEST LXP Filler"
+        }
+    }
+
+    popup_html = """<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <title>NEST LXP Filler</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h2>NEST LXP Filler</h2>
+    <p class="hint">Teacher AI OMR app-аас гарсан Batch JSON-г paste хийгээд LXP дээр бөглөнө.</p>
+    <label>Batch JSON</label>
+    <textarea id="jsonInput" placeholder='[{"code":"NEST25001","name":"Сурагч","score":85}]'></textarea>
+    <div class="row">
+      <button id="sampleBtn" class="secondary">Sample</button>
+      <button id="fillBtn">SEND TO LXP</button>
+    </div>
+    <button id="saveBtn" class="secondary full">Save JSON</button>
+    <button id="clearBtn" class="danger full">Clear</button>
+    <div id="status"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
+"""
+
+    style_css = """body{width:360px;margin:0;font-family:Arial,sans-serif;background:#EEF3FF;color:#111827}.card{padding:16px}h2{margin:0 0 8px 0;font-size:20px}.hint{font-size:12px;color:#6B7280;line-height:1.4}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}textarea{width:100%;height:180px;box-sizing:border-box;border:1px solid #CBD5E1;border-radius:12px;padding:10px;font-size:12px;resize:vertical;outline:none}button{border:none;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer;background:#16A085;color:white}button.secondary{background:#334155}button.danger{background:#DC2626}button.full{width:100%;margin-top:8px}.row{display:flex;gap:8px;margin-top:10px}.row button{flex:1}#status{margin-top:10px;font-size:12px;color:#065F46;background:#D1FAE5;border-radius:10px;padding:8px;display:none;line-height:1.4}"""
+
+    popup_js = """const jsonInput=document.getElementById("jsonInput");const fillBtn=document.getElementById("fillBtn");const sampleBtn=document.getElementById("sampleBtn");const saveBtn=document.getElementById("saveBtn");const clearBtn=document.getElementById("clearBtn");const statusBox=document.getElementById("status");function showStatus(message,isError=false){statusBox.style.display="block";statusBox.style.background=isError?"#FEE2E2":"#D1FAE5";statusBox.style.color=isError?"#991B1B":"#065F46";statusBox.textContent=message}chrome.storage.local.get(["batchJson"],(result)=>{if(result.batchJson)jsonInput.value=result.batchJson});sampleBtn.addEventListener("click",()=>{jsonInput.value=JSON.stringify([{"code":"NEST25001","name":"Сурагч 1","score":85},{"code":"NEST25002","name":"Сурагч 2","score":92}],null,2);showStatus("Sample JSON орлоо.")});saveBtn.addEventListener("click",()=>{chrome.storage.local.set({batchJson:jsonInput.value},()=>{showStatus("JSON хадгалагдлаа.")})});clearBtn.addEventListener("click",()=>{jsonInput.value="";chrome.storage.local.remove(["batchJson"]);showStatus("Цэвэрлэгдлээ.")});fillBtn.addEventListener("click",async()=>{let payload;try{payload=JSON.parse(jsonInput.value);if(!Array.isArray(payload))throw new Error("JSON нь array байх ёстой.")}catch(e){showStatus("JSON буруу байна: "+e.message,true);return}chrome.storage.local.set({batchJson:jsonInput.value});const[tab]=await chrome.tabs.query({active:true,currentWindow:true});if(!tab||!tab.id){showStatus("Active tab олдсонгүй.",true);return}chrome.tabs.sendMessage(tab.id,{action:"FILL_LXP",payload},(response)=>{if(chrome.runtime.lastError){showStatus("LXP tab дээр очоод дахин дарна уу. Extension зөвхөн lxp.eschool.mn дээр ажиллана.",true);return}if(response&&response.ok){showStatus(`Амжилттай: ${response.filled} мөр бөглөсөн. ${response.skipped} мөр алгассан.`)}else{showStatus(response?.message||"Алдаа гарлаа.",true)}})});"""
+
+    content_js = """console.log("NEST LXP Filler content script loaded.");function normalizeText(value){return String(value||"").trim().toLowerCase()}function setInputValue(input,value){const nativeInputValueSetter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"value")?.set;if(nativeInputValueSetter){nativeInputValueSetter.call(input,value)}else{input.value=value}input.dispatchEvent(new Event("input",{bubbles:true}));input.dispatchEvent(new Event("change",{bubbles:true}));input.dispatchEvent(new Event("blur",{bubbles:true}))}function findScoreInputInRow(row){const inputs=Array.from(row.querySelectorAll("input"));const candidates=inputs.filter((input)=>{const type=(input.getAttribute("type")||"text").toLowerCase();const name=normalizeText(input.getAttribute("name"));const placeholder=normalizeText(input.getAttribute("placeholder"));const aria=normalizeText(input.getAttribute("aria-label"));const cls=normalizeText(input.className);if(input.disabled||input.readOnly)return false;return(type==="number"||type==="text"||name.includes("score")||name.includes("grade")||placeholder.includes("score")||placeholder.includes("grade")||aria.includes("score")||aria.includes("grade")||cls.includes("score")||cls.includes("grade"))});if(candidates.length===0)return null;return candidates[candidates.length-1]}function findStudentRow(student){const code=normalizeText(student.code);const name=normalizeText(student.name);const rows=Array.from(document.querySelectorAll("tr, [role='row'], .row, .student-row"));for(const row of rows){const text=normalizeText(row.innerText);if(code&&text.includes(code))return row;if(name&&name!=="nan"&&text.includes(name))return row}return null}function fillLXP(payload){let filled=0;let skipped=0;const missing=[];payload.forEach((student)=>{const row=findStudentRow(student);if(!row){skipped++;missing.push(student.code||student.name||"unknown");return}const input=findScoreInputInRow(row);if(!input){skipped++;missing.push(student.code||student.name||"no input");return}setInputValue(input,String(student.score));filled++});console.log("LXP fill result:",{filled,skipped,missing});return{filled,skipped,missing}}chrome.runtime.onMessage.addListener((request,sender,sendResponse)=>{if(request.action==="FILL_LXP"){try{const result=fillLXP(request.payload||[]);sendResponse({ok:true,filled:result.filled,skipped:result.skipped,missing:result.missing})}catch(e){sendResponse({ok:false,message:e.message})}}return true});"""
+
+    readme_md = """# NEST Teacher AI → LXP Filler Extension
+
+## Суулгах заавар
+1. ZIP файлыг татаж аваад задлана.
+2. Chrome дээр `chrome://extensions` нээнэ.
+3. `Developer mode` асаана.
+4. `Load unpacked` дарна.
+5. Задалсан `nest_lxp_extension` folder-ийг сонгоно.
+6. LXP page нээгээд extension icon дээр Batch JSON paste хийнэ.
+7. `SEND TO LXP` дарна.
+"""
+
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr("nest_lxp_extension/manifest.json", json.dumps(manifest_json, ensure_ascii=False, indent=2))
+        zf.writestr("nest_lxp_extension/popup.html", popup_html)
+        zf.writestr("nest_lxp_extension/style.css", style_css)
+        zf.writestr("nest_lxp_extension/popup.js", popup_js)
+        zf.writestr("nest_lxp_extension/content.js", content_js)
+        zf.writestr("nest_lxp_extension/README.md", readme_md)
+
+    buffer.seek(0)
+    return buffer
+
+
 with st.sidebar:
     st.header("Answer Sheet")
     q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
@@ -578,6 +559,33 @@ with st.sidebar:
         value=1050,
         step=50,
     )
+
+    st.divider()
+    st.subheader("LXP Extension")
+
+    st.caption(
+        "Extension татаж аваад Chrome-д суулгаснаар Batch JSON-г LXP рүү автоматаар бөглөх боломжтой."
+    )
+
+    lxp_extension_zip = create_lxp_extension_zip()
+
+    st.download_button(
+        label="⬇️ LXP Extension татах",
+        data=lxp_extension_zip.getvalue(),
+        file_name="nest_lxp_extension.zip",
+        mime="application/zip",
+        help="ZIP-г татаж аваад задлаад Chrome → Extensions → Load unpacked ашиглан суулгана."
+    )
+
+    with st.expander("Суулгах богино заавар", expanded=False):
+        st.markdown("""
+1. ZIP файлыг татаж аваад задлана.  
+2. Chrome дээр `chrome://extensions` нээнэ.  
+3. `Developer mode` асаана.  
+4. `Load unpacked` дарна.  
+5. Задалсан `nest_lxp_extension` folder-ийг сонгоно.  
+6. LXP page нээгээд extension icon дээр Batch JSON paste хийнэ.  
+""")
 
 
 # ============================================
@@ -1096,11 +1104,6 @@ Bloom түвшин ахиулах шаталсан даалгавар өгөх
 Сурагчийн Bloom анализ дээр үндэслэн
 Монгол хэлээр дараах бүтэцтэй зөвлөмж өг.
 
-Анхаарах:
-- Markdown тэмдэглэгээ битгий ашигла.
-- Дууны үг, номын хэсэг, copyrighted content бүү үүсгэ.
-- Зөвхөн өөрийн боловсруулсан богино зөвлөмж бич.
-
 1. Давуу тал
 2. Сул тал
 3. Сайжруулах арга
@@ -1111,19 +1114,7 @@ Bloom анализ:
 {bloom_summary}
 """
                     response = model.generate_content(gemini_prompt)
-
-                    try:
-                        gemini_text = response.text
-                    except Exception:
-                        try:
-                            gemini_text = response.candidates[0].content.parts[0].text
-                        except Exception as e:
-                            gemini_text = (
-                                "Gemini AI зөвлөмж үүсгэж чадсангүй. "
-                                "Prompt нь safety/copyright filter-д блоклогдсон байж магадгүй. "
-                                f"Дэлгэрэнгүй: {e}"
-                            )
-
+                    gemini_text = response.text
                     gemini_html = html_lib.escape(gemini_text).replace("\n", "<br>")
 
                     st.session_state.gemini_result = gemini_text
@@ -1221,13 +1212,13 @@ ChatGPT AI зөвлөмж:
     )
 
     st.session_state.parent_report_text = parent_review_text
-    parent_docx = generate_parent_report_docx(parent_review_text)
+    parent_pdf = generate_parent_report_pdf(parent_review_text)
 
     st.download_button(
-        label="📥 Зассан Parent Report Word татах",
-        data=parent_docx,
-        file_name=f"{student_code}_{student_name}_Parent_Report.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        label="📥 Зассан Parent Report PDF татах",
+        data=parent_pdf,
+        file_name=f"{student_code}_{student_name}_Parent_Report.pdf",
+        mime="application/pdf",
     )
 
     st.subheader("8. Add to Batch")
