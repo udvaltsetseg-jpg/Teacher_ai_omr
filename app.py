@@ -1265,8 +1265,6 @@ if st.session_state.current_page == "answer_sheet":
 
         st.info("PDF-ийг хэвлээд сурагчдаар A/B/C/D хариулт будуулна.")
 
-    if st.button("⬅️ Нүүр хуудас руу буцах"):
-        go_page("home")
 
     st.stop()
 
@@ -1297,8 +1295,6 @@ if st.session_state.current_page == "extension":
 7. LXP дээр extension icon → `AUTO FILL LXP` дарна.  
 """)
 
-    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_from_extension"):
-        go_page("home")
 
     st.stop()
 
@@ -1360,9 +1356,6 @@ if app_mode == "📷 OMR шалгалт засах → LXP":
 # ============================================
 
 if app_mode == "📁 Бэлэн Excel → LXP":
-
-    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_excel"):
-        go_page("home")
 
     st.markdown("## 📁 Бэлэн Excel дүн → Дүнгийн багц үүсгэх")
 
@@ -1549,9 +1542,6 @@ async function sendAllToLXP(){{
         st.info("Дүнгийн багц хоосон байна.")
 
 if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and answer_img:
-
-    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_omr_working"):
-        go_page("home")
 
     df_answer = pd.read_excel(answer_excel)
 
@@ -2178,6 +2168,4 @@ async function sendAllToLXP(){{
     else:
         st.info("Дүнгийн багц хоосон байна.")
 elif app_mode == "📷 OMR шалгалт засах → LXP":
-    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_omr_empty"):
-        go_page("home")
     st.info("Excel болон сурагчийн зураг оруулна уу.")
