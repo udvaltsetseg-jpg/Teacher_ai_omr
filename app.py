@@ -450,7 +450,7 @@ st.markdown(dedent("""
 
     border-radius:28px;
 
-    padding:34px 28px;
+    padding:28px 24px;
 
     box-shadow:0 8px 30px rgba(0,0,0,0.06);
 
@@ -463,9 +463,10 @@ st.markdown(dedent("""
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
-}
+    justify-content:space-between;
 
+    min-height:520px;
+}
 .feature-card:hover{
     transform:translateY(-5px);
     box-shadow:0 24px 48px rgba(15,23,42,.10);
@@ -488,23 +489,28 @@ st.markdown(dedent("""
 .feature-icon.purple{background:#F3E8FF;color:#7E22CE;}
 
 .feature-title{
-    font-size:34px;
+    font-size:22px;
+
     font-weight:800;
+
     color:#172033;
 
     margin-bottom:18px;
 
     text-align:center;
-}
 
+    line-height:1.4;
+}
 .feature-text{
     color:#5f6b7a;
 
-    font-size:19px;
+    font-size:15px;
 
     line-height:1.9;
 
     text-align:center;
+
+    margin-bottom:20px;
 }
 
 .dashboard-guide{
@@ -1438,8 +1444,8 @@ if st.session_state.current_page == "test_checker":
 st.markdown(dedent("""
 <style>
 .feature-image{
-    width:90px;
-    height:90px;
+    width:84px;
+    height:84px;
 
     margin:0 auto 18px auto;
 
