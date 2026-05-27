@@ -1084,159 +1084,287 @@ with st.sidebar:
         go_page("extension")
 
 
+
 if st.session_state.current_page == "home":
+
     st.markdown("""
-<div class="hero-section">
-    <div class="hero-eyebrow">Teacher AI OMR • LXP workflow</div>
-    <h1 class="hero-title">Шалгалт засах, Bloom шинжилгээ хийх, LXP рүү дүн оруулах ажлыг нэг дор</h1>
-    <p class="hero-subtitle">
-        Бэлэн Excel дүнгээ дүнгийн багц болгох, answer sheet зураг засах, эцэг эхийн тайлан гаргах,
-        мөн Chrome extension ашиглан LXP рүү оноог автоматаар бөглөхөд зориулагдсан багшийн AI туслах систем.
-    </p>
-    <div class="hero-badges">
-        <span class="hero-badge">📁 Excel → Batch</span>
-        <span class="hero-badge">📷 OMR AI grading</span>
-        <span class="hero-badge">📊 Bloom analytics</span>
-        <span class="hero-badge">🧩 LXP autofill</span>
-        <span class="hero-badge">📝 Answer sheet PDF</span>
-    </div>
-</div>
+<style>
+
+.main-title{
+    text-align:center;
+    font-size:58px;
+    font-weight:800;
+    color:white;
+    padding-top:130px;
+}
+
+.main-sub{
+    text-align:center;
+    color:#f1f1f1;
+    font-size:20px;
+    margin-top:10px;
+}
+
+.hero{
+    position:relative;
+    height:430px;
+    border-radius:30px;
+    overflow:hidden;
+    margin-bottom:45px;
+
+    background-image:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop");
+
+    background-size:cover;
+    background-position:center;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+}
+
+.card{
+    background:white;
+    border-radius:28px;
+    padding:35px 30px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    border:1px solid #eeeeee;
+    transition:0.3s;
+    margin-bottom:25px;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 45px rgba(0,0,0,0.12);
+}
+
+.icon-box{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:42px;
+    margin:auto;
+    margin-bottom:20px;
+}
+
+.icon1{ background:#eaf4ff; }
+.icon2{ background:#fff2e8; }
+.icon3{ background:#eef9ef; }
+.icon4{ background:#f3ebff; }
+
+.card-title{
+    text-align:center;
+    font-size:30px;
+    font-weight:800;
+    color:#1e293b;
+    margin-bottom:15px;
+}
+
+.card-desc{
+    text-align:center;
+    color:#6b7280;
+    font-size:17px;
+    line-height:1.8;
+    min-height:110px;
+}
+
+.section-title{
+    font-size:35px;
+    font-weight:800;
+    margin-top:35px;
+    margin-bottom:15px;
+}
+
+.guide-box{
+    background:white;
+    padding:30px;
+    border-radius:24px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.06);
+    line-height:2.3;
+    font-size:18px;
+}
+
+</style>
 """, unsafe_allow_html=True)
 
-    st.markdown('<div class="section-title">Юу хийх вэ?</div>', unsafe_allow_html=True)
-
-    c1, c2 = st.columns(2)
-
-    with c1:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-excel">📁</div>
-    <h3>Бэлэн Excel дүн → Дүнгийн багц үүсгэх</h3>
-    <p>
-        Excel файл upload хийгээд сурагчийн код, нэр, онооны баганыг сонгоно.
-        Систем LXP-д оруулахад бэлэн дүнгийн багц үүсгэнэ.
-    </p>
-    <span class="workflow-tag">Column mapping</span>
-    <span class="workflow-tag">Score validation</span>
-    <span class="workflow-tag">LXP-ready</span>
-</div>
-""", unsafe_allow_html=True)
-        if st.button("📁 Excel дүнгээ оруулах", use_container_width=True, type="primary", key="home_excel_open_btn"):
-            go_page("excel")
-
-    with c2:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-omr">📷</div>
-    <h3>Хариултын хуудас засах</h3>
-    <p>
-        Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж,
-        AI-р урьдчилан засна. Багш final review хийж засварлах боломжтой.
-    </p>
-    <span class="workflow-tag">AI grading</span>
-    <span class="workflow-tag">Teacher review</span>
-    <span class="workflow-tag">Bloom report</span>
-</div>
-""", unsafe_allow_html=True)
-        if st.button("📷 Answer sheet засах", use_container_width=True, type="primary", key="home_omr_open_btn"):
-            go_page("omr")
-
-    c3, c4 = st.columns(2)
-
-    with c3:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-sheet">📝</div>
-    <h3>Хариултын хуудас татах</h3>
-    <p>
-        Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF үүсгэнэ.
-        Хэвлээд шалгалтад шууд ашиглаж болно.
-    </p>
-    <span class="workflow-tag">A4 PDF</span>
-    <span class="workflow-tag">1–200 асуулт</span>
-    <span class="workflow-tag">Printable</span>
-</div>
-""", unsafe_allow_html=True)
-        if st.button("📝 Answer sheet PDF татах", use_container_width=True, key="home_answer_sheet_open_btn"):
-            go_page("answer_sheet")
-
-    with c4:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-ext">🧩</div>
-    <h3>LXP Connector Extension</h3>
-    <p>
-        Chrome extension суулгаснаар Дүнгийн багцын оноог LXP-ийн дүн оруулах
-        хүснэгт рүү автоматаар бөглөх боломжтой.
-    </p>
-    <span class="workflow-tag">Chrome extension</span>
-    <span class="workflow-tag">Auto fill</span>
-    <span class="workflow-tag">0–100 check</span>
-</div>
-""", unsafe_allow_html=True)
-        if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn_2"):
-            go_page("extension")
-
-    st.markdown('<div class="section-title">Ашиглах дараалал</div>', unsafe_allow_html=True)
-
-    step_col, info_col = st.columns([1.35, 1])
-
-    with step_col:
-        st.markdown("""
-<div class="step-box">
-    <div class="step-row">
-        <div class="step-num">1</div>
-        <div class="step-text">
-            <b>Excel дүн бэлэн бол</b> “Бэлэн Excel дүн → Batch” хэсэгт орж файл upload хийнэ.
-            Хэрвээ хариултын хуудасны зураг засах бол “Хариултын хуудас засах” хэсгийг сонгоно.
+    st.markdown("""
+<div class="hero">
+    <div class="overlay">
+        <div class="main-title">
+            Багшийн Туслах Систем
         </div>
-    </div>
-    <div class="step-row">
-        <div class="step-num">2</div>
-        <div class="step-text">
-            Сурагчийн код, нэр, онооны баганыг сонгоод <b>Дүнгийн багц</b> үүсгэнэ.
-            Систем буруу, хоосон, хязгаараас хэтэрсэн оноог шалгана.
-        </div>
-    </div>
-    <div class="step-row">
-        <div class="step-num">3</div>
-        <div class="step-text">
-            <b>SEND ALL TO LXP</b> дарж Batch мэдээллийг extension-д бэлдэнэ.
-        </div>
-    </div>
-    <div class="step-row">
-        <div class="step-num">4</div>
-        <div class="step-text">
-            LXP дүн оруулах хуудсан дээр extension icon → <b>AUTO FILL LXP</b> дарна.
+
+        <div class="main-sub">
+            Teacher AI OMR • LXP AutoFill • Bloom Analytics • AI Reports
         </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-    with info_col:
+    col1, col2 = st.columns(2)
+
+    with col1:
+
         st.markdown("""
-<div class="info-panel">
-    <h4>✅ Систем юуг хөнгөвчлөх вэ?</h4>
-    <p>
-        • Excel-ээс LXP рүү гараар шивэх хугацааг багасгана.<br>
-        • OMR шалгалтын урьдчилсан үнэлгээ хийнэ.<br>
-        • Bloom түвшний гүйцэтгэлийг харуулна.<br>
-        • Багш эцсийн засвар хийсний дараа тайлан, Дүнгийн багц үүсгэнэ.
-    </p>
+        <div class="card">
+
+            <div class="icon-box icon1">
+                📊
+            </div>
+
+            <div class="card-title">
+                Даалгаврын анализ
+            </div>
+
+            <div class="card-desc">
+                Шалгалтын дүн, сурагчийн ахиц,
+                ангийн гүйцэтгэл болон
+                анализ харах хэсэг.
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button(
+            "📊 Анализ нээх",
+            use_container_width=True,
+            key="analysis_btn"
+        ):
+
+            st.markdown("""
+            <meta http-equiv="refresh"
+            content="0; url=https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html">
+            """, unsafe_allow_html=True)
+
+    with col2:
+
+        st.markdown("""
+        <div class="card">
+
+            <div class="icon-box icon2">
+                📝
+            </div>
+
+            <div class="card-title">
+                Тест засах
+            </div>
+
+            <div class="card-desc">
+                OMR answer sheet зураг upload хийж
+                AI ашиглан шалгалт автоматаар
+                засах хэсэг.
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button(
+            "📝 Тест засах",
+            use_container_width=True,
+            key="test_btn"
+        ):
+
+            st.markdown("""
+            <meta http-equiv="refresh"
+            content="0; url=https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html">
+            """, unsafe_allow_html=True)
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+
+        st.markdown("""
+        <div class="card">
+
+            <div class="icon-box icon3">
+                📚
+            </div>
+
+            <div class="card-title">
+                Хичээлийн төлөвлөгөө
+            </div>
+
+            <div class="card-desc">
+                Жилийн төлөвлөгөө,
+                нэгж хичээл,
+                өдөр тутмын бэлтгэл
+                боловсруулах хэсэг.
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button(
+            "📚 Төлөвлөгөө нээх",
+            use_container_width=True,
+            key="lesson_btn"
+        ):
+
+            st.markdown("""
+            <meta http-equiv="refresh"
+            content="0; url=https://example.com/lesson-plan">
+            """, unsafe_allow_html=True)
+
+    with col4:
+
+        st.markdown("""
+        <div class="card">
+
+            <div class="icon-box icon4">
+                🤖
+            </div>
+
+            <div class="card-title">
+                Teacher AI OMR
+            </div>
+
+            <div class="card-desc">
+                Phone Camera → AI Grading →
+                Bloom Analytics →
+                Parent Report →
+                LXP AutoFill workflow.
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button(
+            "🤖 Teacher AI OMR нээх",
+            use_container_width=True,
+            key="teacher_ai_btn"
+        ):
+
+            st.markdown("""
+            <meta http-equiv="refresh"
+            content="0; url=https://mctkflqgtmugzcwxrgjhnr.streamlit.app/">
+            """, unsafe_allow_html=True)
+
+    st.markdown("""
+<div class="section-title">
+🚀 Ашиглах хамгийн энгийн дараалал
 </div>
 """, unsafe_allow_html=True)
 
-        st.markdown("""
-<div class="info-panel" style="margin-top:14px;">
-    <h4>⚠️ Анхаарах</h4>
-    <p>
-        AI засалт нь туслах шинжтэй. Эцсийн дүнг багш review хийж баталгаажуулна.
-        LXP рүү оруулахын өмнө Дүнгийн багцаа заавал шалгаарай.
-    </p>
+    st.markdown("""
+<div class="guide-box">
+
+1️⃣ Даалгаврын анализ хэсэгт Excel upload хийж анализ харна.<br><br>
+
+2️⃣ Тест засах хэсэгт OMR зураг upload хийж AI grading хийнэ.<br><br>
+
+3️⃣ Teacher AI OMR хэсэгт Batch List үүсгэнэ.<br><br>
+
+4️⃣ SEND ALL TO LXP дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.
+
 </div>
 """, unsafe_allow_html=True)
 
     st.stop()
+
 
 
 if st.session_state.current_page == "answer_sheet":
