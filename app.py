@@ -148,7 +148,7 @@ div[data-testid="stMetric"] {
 st.markdown("""
 <div class="hero">
     <h1>Teacher AI OMR</h1>
-    <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
+    <p>📱 Зураг → 🤖 AI шалгалт засалт → 📊 Bloom анализ → 👨‍👩‍👧 Эцэг эхийн тайлан → 🏫 LXP автомат дүн оруулалт</p>
 </div>
 """, unsafe_allow_html=True)
 
