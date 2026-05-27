@@ -1431,8 +1431,8 @@ if st.session_state.current_page == "test_checker":
 st.markdown(dedent("""
 <style>
 .feature-image{
-    width:78px;
-    height:78px;
+    width:90px;
+    height:90px;
     margin:0 auto 14px auto;
     border-radius:18px;
     background-size:cover;
