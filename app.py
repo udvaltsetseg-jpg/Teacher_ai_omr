@@ -464,14 +464,15 @@ AI Recommendation / AI зөвлөмж
 
 
 
+
 def create_lxp_extension_zip():
     buffer = BytesIO()
 
     manifest_json = {
         "manifest_version": 3,
         "name": "NEST Teacher AI LXP Connector",
-        "version": "1.3",
-        "description": "Streamlit Batch JSON-г автоматаар хадгалж, LXP дээр нэг товчоор бөглөх connector.",
+        "version": "1.4",
+        "description": "Teacher AI OMR Batch JSON-г хадгалж, LXP дээр AUTO FILL хийх connector.",
         "permissions": ["tabs", "scripting", "storage", "activeTab"],
         "host_permissions": [
             "http://localhost:8501/*",
@@ -516,7 +517,7 @@ def create_lxp_extension_zip():
   <div class="card">
     <h2>NEST LXP Connector</h2>
     <p class="hint">
-      Teacher AI OMR дээр Batch List гарсан бол энэ товчийг дарахад LXP дээр шууд бөглөгдөнө.
+      Teacher AI OMR дээр <b>SEND ALL TO LXP</b> дарсны дараа энэ товчоор LXP дээр шууд бөглөнө.
     </p>
 
     <button id="fillLatestBtn">AUTO FILL LXP</button>
@@ -528,7 +529,7 @@ def create_lxp_extension_zip():
 </html>
 """
 
-    style_css = """body{width:340px;margin:0;font-family:Arial,sans-serif;background:#EEF3FF;color:#111827}.card{padding:16px}h2{margin:0 0 8px 0;font-size:20px}.hint{font-size:12px;color:#6B7280;line-height:1.5}button{width:100%;border:none;border-radius:12px;padding:14px;font-weight:800;cursor:pointer;background:#16A085;color:white;margin-top:10px;font-size:15px}#status{margin-top:12px;font-size:12px;border-radius:10px;padding:10px;display:none;line-height:1.45}"""
+    style_css = """body{width:340px;margin:0;font-family:Arial,sans-serif;background:#EEF3FF;color:#111827}.card{padding:16px}h2{margin:0 0 8px 0;font-size:20px}.hint{font-size:12px;color:#6B7280;line-height:1.55}button{width:100%;border:none;border-radius:12px;padding:14px;font-weight:800;cursor:pointer;background:#16A085;color:white;margin-top:10px;font-size:15px}#status{margin-top:12px;font-size:12px;border-radius:10px;padding:10px;display:none;line-height:1.45}"""
 
     popup_js = """const fillLatestBtn = document.getElementById("fillLatestBtn");
 const statusBox = document.getElementById("status");
@@ -550,13 +551,13 @@ fillLatestBtn.addEventListener("click", () => {
     if (response && response.ok) {
       showStatus(`Амжилттай: ${response.filled} мөр. Алгассан: ${response.skipped} мөр.`);
     } else {
-      showStatus(response?.message || "Алдаа гарлаа. Teacher AI OMR дээр Batch List үүсгээд дахин дарна уу.", true);
+      showStatus(response?.message || "Batch олдсонгүй. Streamlit дээр SEND ALL TO LXP дарна уу.", true);
     }
   });
 });
 """
 
-    streamlit_content_js = """console.log("✅ Streamlit content loaded");
+    streamlit_content_js = """console.log("✅ Streamlit content loaded v1.4");
 
 window.addEventListener("message", (event) => {
   console.log("📩 Streamlit message received:", event.data);
@@ -569,7 +570,6 @@ window.addEventListener("message", (event) => {
 
   if (!validSource) return;
 
-  // Batch list гармагц Streamlit app-аас payload автоматаар хадгална.
   if (event.data.action === "SAVE_LXP_PAYLOAD") {
     chrome.runtime.sendMessage({
       action: "SAVE_LXP_PAYLOAD",
@@ -578,7 +578,6 @@ window.addEventListener("message", (event) => {
     return;
   }
 
-  // SEND ALL TO LXP дарвал шууд хадгалаад LXP рүү бөглөнө.
   if (event.data.action === "SEND_TO_LXP") {
     chrome.runtime.sendMessage({
       action: "SAVE_AND_FILL_LXP",
@@ -607,7 +606,7 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 """
 
-    background_js = """console.log("✅ NEST Teacher AI LXP Connector background loaded");
+    background_js = """console.log("✅ NEST Teacher AI LXP Connector background v1.4 loaded");
 
 function sendStatus(status) {
   chrome.runtime.sendMessage({
@@ -677,10 +676,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const payload = message.payload || [];
 
     chrome.storage.local.set({ latestPayload: payload }, () => {
-      console.log("✅ Payload auto-saved from Streamlit:", payload);
-      if (sendResponse) {
-        sendResponse({ ok: true, message: "payload saved", count: payload.length });
-      }
+      console.log("✅ Payload saved:", payload);
+      if (sendResponse) sendResponse({ ok: true, count: payload.length });
     });
 
     return true;
@@ -704,7 +701,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (!Array.isArray(payload) || payload.length === 0) {
         const noPayload = {
           ok: false,
-          message: "Хадгалагдсан Batch JSON алга. Teacher AI OMR дээр Batch List үүсгээд page refresh эсвэл SEND ALL TO LXP дарна уу.",
+          message: "Хадгалагдсан Batch JSON алга. Streamlit tab дээр очоод SEND ALL TO LXP дарна уу.",
           filled: 0,
           skipped: 0,
           errors: []
@@ -721,7 +718,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 """
 
-    lxp_content_js = """console.log("✅ LXP content loaded");
+    lxp_content_js = """console.log("✅ LXP content loaded v1.4");
 
 function normalizeText(value) {
   return String(value || "").trim().toLowerCase();
@@ -871,21 +868,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 """
 
-    readme_md = """# NEST Teacher AI LXP Connector v1.3
+    readme_md = """# NEST Teacher AI LXP Connector v1.4
 
-## Ашиглах
-1. Teacher AI OMR app дээр Batch List үүсгэнэ.
-2. Batch List гарсан үед payload автоматаар extension-д хадгалагдана.
-3. LXP дүн оруулах page нээнэ.
-4. Extension icon → AUTO FILL LXP дарна.
-5. Дүн шууд бөглөгдөнө.
+1. Streamlit app дээр Batch List үүсгэнэ.
+2. SEND ALL TO LXP дарна.
+3. LXP tab нээлттэй байвал шууд бөглөгдөнө.
+4. Дараа нь extension icon → AUTO FILL LXP дарвал хамгийн сүүлд хадгалсан Batch-аар дахин бөглөнө.
 
-## SEND ALL TO LXP
-Streamlit дээр SEND ALL TO LXP дарвал мөн шууд хадгалаад LXP рүү бөглөнө.
-
-## Validation
-- 0–100 хоорондох тоон дүнг бөглөнө.
-- Үсгэн дүн, хоосон дүн, 100-аас их дүнг алгасна.
+Анхаарах:
+- Шинэ extension суулгасны дараа LXP болон Streamlit tab-уудаа refresh хийнэ.
+- Chrome дээр Relaunch to update гарвал дарна.
 """
 
     with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -933,7 +925,7 @@ with st.sidebar:
     st.download_button(
         label="⬇️ LXP Connector татах",
         data=lxp_extension_zip.getvalue(),
-        file_name="nest_lxp_autofill_connector.zip",
+        file_name="nest_lxp_autofill_connector_v14.zip",
         mime="application/zip",
         help="ZIP-г татаж аваад задлаад Chrome → Extensions → Load unpacked ашиглан суулгана."
     )
@@ -1116,11 +1108,24 @@ if app_mode == "📁 Бэлэн Excel → LXP":
         components.html(
             f"""
 <script>
-window.parent.postMessage({{
-    source: "NEST_TEACHER_AI",
-    action: "SAVE_LXP_PAYLOAD",
-    payload: {payload_json}
-}}, "*");
+const NEST_LXP_PAYLOAD = {payload_json};
+
+function postToExtension(action) {{
+    const msg = {{
+        source: "NEST_TEACHER_AI",
+        action: action,
+        payload: NEST_LXP_PAYLOAD
+    }};
+
+    try {{ window.postMessage(msg, "*"); }} catch(e) {{}}
+    try {{ window.parent.postMessage(msg, "*"); }} catch(e) {{}}
+    try {{ window.top.postMessage(msg, "*"); }} catch(e) {{}}
+}}
+
+postToExtension("SAVE_LXP_PAYLOAD");
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 1500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
 </script>
 <button onclick="sendAllToLXP()"
     style="
@@ -1139,11 +1144,7 @@ window.parent.postMessage({{
 
 <script>
 function sendAllToLXP(){{
-    window.parent.postMessage({{
-        source: "NEST_TEACHER_AI",
-        action: "SEND_TO_LXP",
-        payload: {payload_json}
-    }}, "*");
+    postToExtension("SEND_TO_LXP");
     alert("Batch list LXP Connector рүү илгээгдлээ. LXP tab нээлттэй байвал автоматаар бөглөгдөнө.");
 }}
 </script>
@@ -1725,11 +1726,24 @@ ChatGPT AI зөвлөмж:
         components.html(
             f"""
 <script>
-window.parent.postMessage({{
-    source: "NEST_TEACHER_AI",
-    action: "SAVE_LXP_PAYLOAD",
-    payload: {payload_json}
-}}, "*");
+const NEST_LXP_PAYLOAD = {payload_json};
+
+function postToExtension(action) {{
+    const msg = {{
+        source: "NEST_TEACHER_AI",
+        action: action,
+        payload: NEST_LXP_PAYLOAD
+    }};
+
+    try {{ window.postMessage(msg, "*"); }} catch(e) {{}}
+    try {{ window.parent.postMessage(msg, "*"); }} catch(e) {{}}
+    try {{ window.top.postMessage(msg, "*"); }} catch(e) {{}}
+}}
+
+postToExtension("SAVE_LXP_PAYLOAD");
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 1500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
 </script>
 <button onclick="sendAllToLXP()"
     style="
@@ -1748,11 +1762,7 @@ window.parent.postMessage({{
 
 <script>
 function sendAllToLXP(){{
-    window.parent.postMessage({{
-        source: "NEST_TEACHER_AI",
-        action: "SEND_TO_LXP",
-        payload: {payload_json}
-    }}, "*");
+    postToExtension("SEND_TO_LXP");
     alert("Batch list LXP Connector рүү илгээгдлээ. LXP tab нээлттэй байвал автоматаар бөглөгдөнө.");
 }}
 </script>
