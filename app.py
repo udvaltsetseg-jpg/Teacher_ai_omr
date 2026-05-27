@@ -1426,12 +1426,19 @@ st.markdown(dedent("""
 .feature-image{
     width:90px;
     height:90px;
+
+    margin:0 auto 18px auto;
+
     border-radius:20px;
-    margin-bottom:18px;
+
     background-size:cover;
     background-position:center;
+
     border:4px solid #FFFFFF;
+
     box-shadow:0 10px 24px rgba(0,0,0,0.12);
+
+    display:block;
 }
 
 .img-analysis{
