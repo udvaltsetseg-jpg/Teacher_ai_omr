@@ -1356,10 +1356,30 @@ if st.session_state.current_page == "assignment_analysis":
             use_container_width=True,
         )
 
-    components.iframe(
-        "https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html",
+    components.html(
+        """
+        <div style="position:relative;width:100%;height:950px;overflow:hidden;border:0;">
+            <iframe
+                src="https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html"
+                style="width:100%;height:950px;border:0;"
+                scrolling="yes">
+            </iframe>
+
+            <!-- Iframe доторх 'Нүүр хуудас' button-ийг нуух overlay -->
+            <div style="
+                position:absolute;
+                top:18px;
+                left:18px;
+                width:190px;
+                height:64px;
+                background:#f7f6f3;
+                border-radius:16px;
+                z-index:9999;
+                pointer-events:none;">
+            </div>
+        </div>
+        """,
         height=950,
-        scrolling=True,
     )
 
     st.stop()
@@ -1381,10 +1401,30 @@ if st.session_state.current_page == "test_checker":
             use_container_width=True,
         )
 
-    components.iframe(
-        "https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html",
+    components.html(
+        """
+        <div style="position:relative;width:100%;height:950px;overflow:hidden;border:0;">
+            <iframe
+                src="https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html"
+                style="width:100%;height:950px;border:0;"
+                scrolling="yes">
+            </iframe>
+
+            <!-- Iframe доторх 'Нүүр хуудас' button-ийг нуух overlay -->
+            <div style="
+                position:absolute;
+                top:18px;
+                left:18px;
+                width:190px;
+                height:64px;
+                background:#f7f6f3;
+                border-radius:16px;
+                z-index:9999;
+                pointer-events:none;">
+            </div>
+        </div>
+        """,
         height=950,
-        scrolling=True,
     )
 
     st.stop()
@@ -1470,7 +1510,32 @@ if st.session_state.current_page == "home":
             st.session_state.teacher_ai_mode = True
             go_page("teacher_ai_home")
 
-    
+    st.markdown(dedent("""
+    <div class="dashboard-guide">
+        <div class="guide-heading">🚀 Ашиглах хамгийн энгийн дараалал</div>
+
+        <div class="guide-item">
+            <div class="guide-num">1</div>
+            <div class="guide-text">Даалгаврын анализ хэсэгт Excel upload хийж анализ харна.</div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">2</div>
+            <div class="guide-text">Тест засах хэсэгт OMR зураг upload хийж AI grading хийнэ.</div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">3</div>
+            <div class="guide-text">Teacher AI OMR хэсэгт Дүнгийн багц үүсгэнэ.</div>
+        </div>
+
+        <div class="guide-item">
+            <div class="guide-num">4</div>
+            <div class="guide-text">SEND ALL TO LXP дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.</div>
+        </div>
+    </div>
+    """), unsafe_allow_html=True)
+
     st.stop()
 
 
