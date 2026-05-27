@@ -148,7 +148,7 @@ div[data-testid="stMetric"] {
 st.markdown("""
 <div class="hero">
     <h1>Teacher AI OMR</h1>
-    <p>📱 Зураг → 🤖 AI шалгалт засалт → 📊 Bloom анализ → 👨‍👩‍👧 Эцэг эхийн тайлан → 🏫 LXP автомат дүн оруулалт</p>
+    <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -897,26 +897,6 @@ Paste хийх шаардлагагүй.
 
 
 with st.sidebar:
-
-    st.subheader("Үндсэн цэс")
-
-    if st.button("🏠 Нүүр хуудас", use_container_width=True):
-        go_page("home")
-
-    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
-        go_page("excel")
-
-    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
-        go_page("omr")
-
-    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
-        go_page("answer_sheet")
-
-    if st.button("🧩 Extension татах", use_container_width=True):
-        go_page("extension")
-
-    st.divider()
-
     st.header("Answer Sheet")
     q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
     pdf_buffer = generate_answer_sheet_pdf(q_count)
@@ -971,6 +951,25 @@ def go_page(page_name):
     st.session_state.current_page = page_name
     st.rerun()
 
+
+with st.sidebar:
+    st.divider()
+    st.subheader("Үндсэн цэс")
+
+    if st.button("🏠 Нүүр хуудас", use_container_width=True):
+        go_page("home")
+
+    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
+        go_page("excel")
+
+    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
+        go_page("omr")
+
+    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
+        go_page("answer_sheet")
+
+    if st.button("🧩 Extension татах", use_container_width=True):
+        go_page("extension")
 
 
 if st.session_state.current_page == "home":
