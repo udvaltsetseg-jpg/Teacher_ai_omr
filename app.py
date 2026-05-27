@@ -1083,9 +1083,6 @@ with st.sidebar:
     if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
         go_page("extension")
 
-    if st.button("📊 Grade Viewer", use_container_width=True, key="sidebar_grade_viewer_btn"):
-        go_page("grade_viewer")
-
 
 if st.session_state.current_page == "home":
     st.markdown("""
@@ -1180,48 +1177,6 @@ if st.session_state.current_page == "home":
         if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn_2"):
             go_page("extension")
 
-
-    st.markdown('<div class="section-title">📊 Нэмэлт систем</div>', unsafe_allow_html=True)
-
-    gv_col1, gv_col2 = st.columns([1, 1])
-
-    with gv_col1:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-excel">📊</div>
-    <h3>Grade Viewer систем</h3>
-    <p>
-        Дүнгийн анализ, сурагчдын гүйцэтгэлийн харагдац, тестийн статистик болон
-        багшийн нэмэлт хэрэгслийг өөрийн систем дотроос шууд ашиглана.
-    </p>
-    <span class="workflow-tag">Grade analysis</span>
-    <span class="workflow-tag">Statistics</span>
-    <span class="workflow-tag">Teacher tool</span>
-</div>
-""", unsafe_allow_html=True)
-
-        if st.button("📊 Grade Viewer нээх", use_container_width=True, key="home_grade_viewer_open_btn"):
-            go_page("grade_viewer")
-
-    with gv_col2:
-        st.markdown("""
-<div class="workflow-card">
-    <div class="workflow-icon icon-omr">🧑‍🏫</div>
-    <h3>Багшийн ажлын урсгал</h3>
-    <p>
-        Excel дүн, OMR шалгалт, Bloom анализ, эцэг эхийн тайлан, LXP автомат бөглөлтийг
-        нэг workflow болгон ашиглахад зориулагдсан.
-    </p>
-    <span class="workflow-tag">Workflow</span>
-    <span class="workflow-tag">Assessment</span>
-    <span class="workflow-tag">LXP</span>
-</div>
-""", unsafe_allow_html=True)
-
-        if st.button("📁 Дүнгийн багц үүсгэх", use_container_width=True, key="home_grade_workflow_btn"):
-            go_page("excel")
-
-
     st.markdown('<div class="section-title">Ашиглах дараалал</div>', unsafe_allow_html=True)
 
     step_col, info_col = st.columns([1.35, 1])
@@ -1280,34 +1235,6 @@ if st.session_state.current_page == "home":
     </p>
 </div>
 """, unsafe_allow_html=True)
-
-    st.stop()
-
-
-
-# ============================================
-# GRADE VIEWER PAGE
-# ============================================
-
-if st.session_state.current_page == "grade_viewer":
-    st.markdown("## 📊 Grade Viewer систем")
-    st.caption("Дүнгийн анализ, тестийн статистик, сурагчдын гүйцэтгэлийн харагдац.")
-
-    with st.container(border=True):
-        st.markdown("""
-### 🧑‍🏫 Багшийн нэмэлт туслах хэрэгсэл
-
-Энэ хэсэгт Grade Viewer системийг өөрийн Teacher AI OMR дотроос ашиглана.
-""")
-
-        components.iframe(
-            "https://kholboo.github.io/Grade-Viewer/",
-            height=900,
-            scrolling=True,
-        )
-
-    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_from_grade_viewer"):
-        go_page("home")
 
     st.stop()
 
