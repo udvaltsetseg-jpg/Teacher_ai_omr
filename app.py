@@ -304,7 +304,7 @@ div[data-testid="stMetric"] {
 st.markdown("""
 <div class="hero">
     <h1>Teacher AI OMR</h1>
-    <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
+    <p>📱 Зураг авах→🤖 AI үнэлгээ→📊 Bloom анализ→📝 Эцэг эхийн тайлан→🏫 LXP автоматаар бөглөх</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -781,7 +781,7 @@ window.addEventListener("message", (event) => {
 
   const validSource =
     event.data.source === "TEACHER_AI" ||
-    event.data.source === "NEST_TEACHER_AI";
+    event.data.source === "TEACHER_AI";
 
   if (!validSource) return;
 
@@ -1111,10 +1111,10 @@ if st.session_state.current_page == "home":
         st.markdown("""
 <div class="workflow-card">
     <div class="workflow-icon icon-excel">📁</div>
-    <h3>Бэлэн Excel дүн → Batch үүсгэх</h3>
+    <h3>Бэлэн Excel дүн → Дүнгийн багц үүсгэх</h3>
     <p>
         Excel файл upload хийгээд сурагчийн код, нэр, онооны баганыг сонгоно.
-        Систем LXP-д оруулахад бэлэн Batch List үүсгэнэ.
+        Систем LXP-д оруулахад бэлэн дүнгийн багц үүсгэнэ.
     </p>
     <span class="workflow-tag">Column mapping</span>
     <span class="workflow-tag">Score validation</span>
@@ -1166,7 +1166,7 @@ if st.session_state.current_page == "home":
     <div class="workflow-icon icon-ext">🧩</div>
     <h3>LXP Connector Extension</h3>
     <p>
-        Chrome extension суулгаснаар Batch List-ийн оноог LXP-ийн дүн оруулах
+        Chrome extension суулгаснаар Дүнгийн багцын оноог LXP-ийн дүн оруулах
         хүснэгт рүү автоматаар бөглөх боломжтой.
     </p>
     <span class="workflow-tag">Chrome extension</span>
@@ -1194,7 +1194,7 @@ if st.session_state.current_page == "home":
     <div class="step-row">
         <div class="step-num">2</div>
         <div class="step-text">
-            Сурагчийн код, нэр, онооны баганыг сонгоод <b>Batch List</b> үүсгэнэ.
+            Сурагчийн код, нэр, онооны баганыг сонгоод <b>Дүнгийн багц</b> үүсгэнэ.
             Систем буруу, хоосон, хязгаараас хэтэрсэн оноог шалгана.
         </div>
     </div>
@@ -1221,7 +1221,7 @@ if st.session_state.current_page == "home":
         • Excel-ээс LXP рүү гараар шивэх хугацааг багасгана.<br>
         • OMR шалгалтын урьдчилсан үнэлгээ хийнэ.<br>
         • Bloom түвшний гүйцэтгэлийг харуулна.<br>
-        • Багш эцсийн засвар хийсний дараа тайлан, batch үүсгэнэ.
+        • Багш эцсийн засвар хийсний дараа тайлан, Дүнгийн багц үүсгэнэ.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -1231,7 +1231,7 @@ if st.session_state.current_page == "home":
     <h4>⚠️ Анхаарах</h4>
     <p>
         AI засалт нь туслах шинжтэй. Эцсийн дүнг багш review хийж баталгаажуулна.
-        LXP рүү оруулахын өмнө Batch List-ээ заавал шалгаарай.
+        LXP рүү оруулахын өмнө Дүнгийн багцаа заавал шалгаарай.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -1273,7 +1273,7 @@ if st.session_state.current_page == "answer_sheet":
 
 if st.session_state.current_page == "extension":
     st.markdown("## 🧩 LXP Connector Extension татах")
-    st.caption("Extension татаж суулгаснаар Batch List-ийн дүнг LXP рүү автоматаар бөглөх боломжтой.")
+    st.caption("Extension татаж суулгаснаар Дүнгийн багцыг LXP рүү автоматаар бөглөх боломжтой.")
 
     with st.container(border=True):
         ext_zip = create_lxp_extension_zip()
