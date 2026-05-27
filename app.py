@@ -148,7 +148,7 @@ div[data-testid="stMetric"] {
 st.markdown("""
 <div class="hero">
     <h1>Teacher AI OMR</h1>
-    <p>📱 Зураг → 🤖 AI шалгалт засалт → 📊 Bloom анализ → 👨‍👩‍👧 Эцэг эхийн тайлан → 🏫 LXP автомат дүн оруулалт</p>
+    <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -896,21 +896,20 @@ Paste хийх шаардлагагүй.
     return buffer
 
 
+
+q_count = 20  # default question count
+
+# ============================================
+# HOME + SIMPLE NAVIGATION
+# ============================================
+
 def go_page(page_name):
     st.session_state.current_page = page_name
     st.rerun()
 
 
 with st.sidebar:
-
-    st.markdown("""
-    <style>
-    section[data-testid="stSidebar"] .block-container {
-        padding-top: 0rem;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
+    st.divider()
     st.subheader("Үндсэн цэс")
 
     if st.button("🏠 Нүүр хуудас", use_container_width=True):
@@ -927,58 +926,6 @@ with st.sidebar:
 
     if st.button("🧩 Extension татах", use_container_width=True):
         go_page("extension")
-
-    st.divider()
-
-    st.header("Answer Sheet")
-    q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
-    pdf_buffer = generate_answer_sheet_pdf(q_count)
-    st.download_button(
-        label="PDF татах",
-        data=pdf_buffer,
-        file_name=f"OMR_{q_count}Q.pdf",
-        mime="application/pdf",
-    )
-
-    preview_width = st.slider(
-        "Preview зурагны өргөн",
-        min_value=500,
-        max_value=1400,
-        value=1050,
-        step=50,
-    )
-
-    st.divider()
-    st.subheader("LXP Connector Extension")
-
-    st.caption(
-        "LXP Connector extension татаж суулгаснаар SEND ALL TO LXP товчоор дүнг LXP рүү шууд автоматаар бөглөнө."
-    )
-
-    lxp_extension_zip = create_lxp_extension_zip()
-
-    st.download_button(
-        label="⬇️ LXP Connector татах",
-        data=lxp_extension_zip.getvalue(),
-        file_name="lxp_clipboard_connector.zip",
-        mime="application/zip",
-        help="ZIP-г татаж аваад задлаад Chrome → Extensions → Load unpacked ашиглан суулгана."
-    )
-
-    with st.expander("Суулгах богино заавар", expanded=False):
-        st.markdown("""
-1. ZIP файлыг татаж аваад задлана.  
-2. Chrome дээр `chrome://extensions` нээнэ.  
-3. `Developer mode` асаана.  
-4. `Load unpacked` дарна.  
-5. Задалсан `lxp_clipboard_connector` folder-ийг сонгоно.  
-6. Үндсэн програм дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
-""")
-
-
-# ============================================
-# HOME + SIMPLE NAVIGATION
-# ============================================
 
 
 if st.session_state.current_page == "home":
@@ -1061,7 +1008,7 @@ if st.session_state.current_page == "answer_sheet":
             "Асуултын тоо",
             min_value=1,
             max_value=200,
-            value=int(q_count),
+            value=20,
             step=1,
             key="answer_sheet_page_q_count",
         )
@@ -1131,6 +1078,30 @@ else:
 
 if app_mode == "📷 OMR шалгалт засах → LXP":
     st.markdown("## 📷 Хариултын хуудас засах → LXP")
+
+    with st.container(border=True):
+        st.markdown("### ⚙️ OMR тохиргоо")
+        omr_set_col1, omr_set_col2 = st.columns(2)
+
+        with omr_set_col1:
+            q_count = st.number_input(
+                "Шалгах асуултын тоо",
+                min_value=1,
+                max_value=200,
+                value=20,
+                step=1,
+                key="omr_page_q_count"
+            )
+
+        with omr_set_col2:
+            preview_width = st.slider(
+                "Preview зурагны өргөн",
+                min_value=500,
+                max_value=1400,
+                value=1050,
+                step=50,
+                key="omr_page_preview_width"
+            )
 
     col1, col2 = st.columns(2)
 
