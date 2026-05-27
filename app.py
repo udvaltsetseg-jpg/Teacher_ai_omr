@@ -446,15 +446,23 @@ st.markdown(dedent("""
 .badge-orange{background:#FFEDD5;color:#EA580C;}
 
 .feature-card{
-    background:#FFFFFF;
-    border:1px solid #E5E7EB;
-    border-radius:22px;
-    padding:26px 24px 22px 24px;
-    min-height:365px;
-    box-shadow:0 18px 38px rgba(15,23,42,.065);
-    transition:all .18s ease;
+    background:white;
+
+    border-radius:28px;
+
+    padding:34px 28px;
+
+    box-shadow:0 8px 30px rgba(0,0,0,0.06);
+
+    border:1px solid #edf1f7;
+
+    transition:0.25s;
+
+    text-align:center;
+
     display:flex;
     flex-direction:column;
+    align-items:center;
     justify-content:flex-start;
 }
 
@@ -480,17 +488,23 @@ st.markdown(dedent("""
 .feature-icon.purple{background:#F3E8FF;color:#7E22CE;}
 
 .feature-title{
-    font-size:22px;
-    font-weight:950;
-    color:#0F172A;
-    margin-bottom:14px;
+    font-size:34px;
+    font-weight:800;
+    color:#172033;
+
+    margin-bottom:18px;
+
+    text-align:center;
 }
 
 .feature-text{
-    color:#475569;
-    font-size:15px;
-    line-height:1.8;
-    min-height:120px;
+    color:#5f6b7a;
+
+    font-size:19px;
+
+    line-height:1.9;
+
+    text-align:center;
 }
 
 .dashboard-guide{
