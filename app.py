@@ -896,6 +896,34 @@ Paste хийх шаардлагагүй.
     return buffer
 
 
+# ============================================
+# HOME + SIMPLE NAVIGATION
+# ============================================
+
+def go_page(page_name):
+    st.session_state.current_page = page_name
+    st.rerun()
+
+
+with st.sidebar:
+    st.divider()
+    st.subheader("Үндсэн цэс")
+
+    if st.button("🏠 Нүүр хуудас", use_container_width=True):
+        go_page("home")
+
+    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
+        go_page("excel")
+
+    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
+        go_page("omr")
+
+    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
+        go_page("answer_sheet")
+
+    if st.button("🧩 Extension татах", use_container_width=True):
+        go_page("extension")
+
 with st.sidebar:
     st.header("Answer Sheet")
     q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
@@ -942,34 +970,6 @@ with st.sidebar:
 6. Үндсэн програм дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
 """)
 
-
-# ============================================
-# HOME + SIMPLE NAVIGATION
-# ============================================
-
-def go_page(page_name):
-    st.session_state.current_page = page_name
-    st.rerun()
-
-
-with st.sidebar:
-    st.divider()
-    st.subheader("Үндсэн цэс")
-
-    if st.button("🏠 Нүүр хуудас", use_container_width=True):
-        go_page("home")
-
-    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
-        go_page("excel")
-
-    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
-        go_page("omr")
-
-    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
-        go_page("answer_sheet")
-
-    if st.button("🧩 Extension татах", use_container_width=True):
-        go_page("extension")
 
 
 if st.session_state.current_page == "home":
