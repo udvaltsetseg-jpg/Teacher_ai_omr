@@ -1496,32 +1496,7 @@ if st.session_state.current_page == "home":
             st.session_state.teacher_ai_mode = True
             go_page("teacher_ai_home")
 
-    st.markdown(dedent("""
-    <div class="dashboard-guide">
-        <div class="guide-heading">🚀 Ашиглах хамгийн энгийн дараалал</div>
-
-        <div class="guide-item">
-            <div class="guide-num">1</div>
-            <div class="guide-text">Даалгаврын анализ хэсэгт Excel upload хийж анализ харна.</div>
-        </div>
-
-        <div class="guide-item">
-            <div class="guide-num">2</div>
-            <div class="guide-text">Тест засах хэсэгт OMR зураг upload хийж AI grading хийнэ.</div>
-        </div>
-
-        <div class="guide-item">
-            <div class="guide-num">3</div>
-            <div class="guide-text">Teacher AI OMR хэсэгт Дүнгийн багц үүсгэнэ.</div>
-        </div>
-
-        <div class="guide-item">
-            <div class="guide-num">4</div>
-            <div class="guide-text">SEND ALL TO LXP дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.</div>
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
-
+   
     st.stop()
 
 
