@@ -1071,7 +1071,7 @@ with st.sidebar:
     if st.button("🏠 Нүүр хуудас", use_container_width=True, key="sidebar_home_btn"):
         go_page("home")
 
-    if st.button("📁 Бэлэн Excel → Дүнгийн багц үүсгэх", use_container_width=True, key="sidebar_excel_btn"):
+    if st.button("📁 Бэлэн Excel → Дүнгийн багц", use_container_width=True, key="sidebar_excel_btn"):
         go_page("excel")
 
     if st.button("📷 Хариултын хуудас засах", use_container_width=True, key="sidebar_omr_btn"):
