@@ -1361,22 +1361,15 @@ if st.session_state.current_page == "assignment_analysis":
         <div style="position:relative;width:100%;height:950px;overflow:hidden;border:0;">
             <iframe
                 src="https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html"
-                style="width:100%;height:950px;border:0;"
+                style="
+                    width:100%;
+                    height:1030px;
+                    border:0;
+                    transform:translateY(-82px);
+                    display:block;
+                "
                 scrolling="yes">
             </iframe>
-
-            <!-- Iframe доторх 'Нүүр хуудас' button-ийг нуух overlay -->
-            <div style="
-                position:absolute;
-                top:18px;
-                left:18px;
-                width:190px;
-                height:64px;
-                background:#f7f6f3;
-                border-radius:16px;
-                z-index:9999;
-                pointer-events:none;">
-            </div>
         </div>
         """,
         height=950,
@@ -1406,22 +1399,15 @@ if st.session_state.current_page == "test_checker":
         <div style="position:relative;width:100%;height:950px;overflow:hidden;border:0;">
             <iframe
                 src="https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html"
-                style="width:100%;height:950px;border:0;"
+                style="
+                    width:100%;
+                    height:1030px;
+                    border:0;
+                    transform:translateY(-82px);
+                    display:block;
+                "
                 scrolling="yes">
             </iframe>
-
-            <!-- Iframe доторх 'Нүүр хуудас' button-ийг нуух overlay -->
-            <div style="
-                position:absolute;
-                top:18px;
-                left:18px;
-                width:190px;
-                height:64px;
-                background:#f7f6f3;
-                border-radius:16px;
-                z-index:9999;
-                pointer-events:none;">
-            </div>
         </div>
         """,
         height=950,
