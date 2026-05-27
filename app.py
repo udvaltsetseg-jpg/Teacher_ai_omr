@@ -562,7 +562,7 @@ fillLatestBtn.addEventListener("click", async () => {
     }
 
     if (!Array.isArray(payload) || payload.length === 0) {
-      showStatus("Batch JSON олдсонгүй. Streamlit дээр SEND ALL TO LXP дарсны дараа дахин AUTO FILL LXP дарна уу.", true);
+      showStatus("Batch JSON олдсонгүй. SEND ALL TO LXP дарсны дараа дахин AUTO FILL LXP дарна уу.", true);
       return;
     }
 
@@ -905,7 +905,7 @@ with st.sidebar:
 3. `Developer mode` асаана.  
 4. `Load unpacked` дарна.  
 5. Задалсан `lxp_clipboard_connector` folder-ийг сонгоно.  
-6. Streamlit дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
+6. Үндсэн програм дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
 """)
 
 
