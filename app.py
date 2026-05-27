@@ -1415,7 +1415,32 @@ if st.session_state.current_page == "test_checker":
 
     st.stop()
 
+.feature-image{
+    width:90px;
+    height:90px;
+    border-radius:20px;
+    margin-bottom:18px;
+    background-size:cover;
+    background-position:center;
+    border:4px solid #FFFFFF;
+    box-shadow:0 10px 24px rgba(0,0,0,0.12);
+}
 
+.img-analysis{
+    background-image:url("https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop");
+}
+
+.img-omr{
+    background-image:url("https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1200&auto=format&fit=crop");
+}
+
+.img-plan{
+    background-image:url("https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=1200&auto=format&fit=crop");
+}
+
+.img-ai{
+    background-image:url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop");
+}
 if st.session_state.current_page == "home":
 
     st.markdown(dedent("""
@@ -1440,7 +1465,7 @@ if st.session_state.current_page == "home":
     with c1:
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon green">📊</div>
+           <div class="feature-image img-analysis"></div>
             <div class="feature-title">Даалгаврын анализ</div>
             <div class="feature-text">
                 Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
@@ -1454,7 +1479,7 @@ if st.session_state.current_page == "home":
     with c2:
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon blue">📝</div>
+            <div class="feature-image img-omr"></div>
             <div class="feature-title">Тест засах</div>
             <div class="feature-text">
                 OMR хариултын хуудас зураг upload хийж AI ашиглан шалгалт засах хэсэг.
@@ -1468,7 +1493,7 @@ if st.session_state.current_page == "home":
     with c3:
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon yellow">📚</div>
+            <div class="feature-image img-plan"></div>
             <div class="feature-title">Хичээлийн төлөвлөгөө</div>
             <div class="feature-text">
                 Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл боловсруулах хэсэг.
@@ -1484,7 +1509,7 @@ if st.session_state.current_page == "home":
     with c4:
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon purple">🤖</div>
+            <div class="feature-image img-ai"></div>
             <div class="feature-title">Teacher AI OMR</div>
             <div class="feature-text">
                 Утасны камераар зураг авах → AI шалгалт засах → Bloom шинжилгээ → Эцэг эхийн тайлан → LXP автоматаар бөглөх.
