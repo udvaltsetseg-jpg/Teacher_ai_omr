@@ -66,7 +66,7 @@ BLOOM_MN = {
 }
 
 st.set_page_config(
-    page_title="Teacher AI OMR",
+    page_title="Багшийн AI OMR",
     layout="wide",
 )
 
@@ -191,7 +191,7 @@ div[data-testid="stMetric"] {
     font-weight: 750;
     color: #374151;
 }
-.ажиллах дараалал-card {
+.workflow-card {
     background: #FFFFFF;
     border: 1px solid #E5E7EB;
     border-radius: 24px;
@@ -200,11 +200,11 @@ div[data-testid="stMetric"] {
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.045);
     transition: 0.18s ease-in-out;
 }
-.ажиллах дараалал-card:hover {
+.workflow-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
 }
-.ажиллах дараалал-icon {
+.workflow-icon {
     width: 52px;
     height: 52px;
     border-radius: 18px;
@@ -218,19 +218,19 @@ div[data-testid="stMetric"] {
 .icon-omr { background: #DBEAFE; }
 .icon-sheet { background: #FEF3C7; }
 .icon-ext { background: #FCE7F3; }
-.ажиллах дараалал-card h3 {
+.workflow-card h3 {
     margin: 0 0 10px 0;
     color: #111827;
     font-size: 23px;
     font-weight: 900;
 }
-.ажиллах дараалал-card p {
+.workflow-card p {
     color: #6B7280;
     font-size: 14px;
     line-height: 1.7;
     margin-bottom: 12px;
 }
-.ажиллах дараалал-tag {
+.workflow-tag {
     display: inline-block;
     background: #F3F4F6;
     color: #374151;
@@ -558,8 +558,8 @@ if "chatgpt_result" not in st.session_state:
     st.session_state.chatgpt_result = ""
 if "parent_report_text" not in st.session_state:
     st.session_state.parent_report_text = ""
-if "шалгах горим_image" not in st.session_state:
-    st.session_state.шалгах горим_image = None
+if "debug_image" not in st.session_state:
+    st.session_state.debug_image = None
 if "rotation_angle" not in st.session_state:
     st.session_state.rotation_angle = 0
 if "current_page" not in st.session_state:
@@ -574,7 +574,7 @@ def generate_answer_sheet_pdf(question_count):
     width, height = A4
 
     c.setFont(PDF_FONT, 16)
-    c.drawString(60, height - 50, "AI OMR Хариултын хуудас")
+    c.drawString(60, height - 50, "AI OMR Answer Sheet")
 
     c.setFont(PDF_FONT, 10)
     c.drawString(60, height - 75, "Student Code: ____________________")
@@ -596,7 +596,7 @@ def generate_answer_sheet_pdf(question_count):
         if i > 0 and index_on_page == 0:
             c.showPage()
             c.setFont(PDF_FONT, 16)
-            c.drawString(60, height - 50, "AI OMR Хариултын хуудас")
+            c.drawString(60, height - 50, "AI OMR Answer Sheet")
 
         if index_on_page < rows_per_column:
             base_x = left_start_x
@@ -662,14 +662,14 @@ def find_answer_sheet(image_pil):
 
 
 def detect_omr_answers(image_pil, question_count):
-    with st.sidebar.expander("OMR Debug гар тохиргоо", expanded=False):
+    with st.sidebar.expander("OMR шалгах горим гар тохиргоо", expanded=False):
         first_x = st.number_input("OMR: Эхний A bubble X", 50, 500, 178, 1, key="omr_first_x")
         first_y = st.number_input("OMR: Эхний мөр Y", 100, 700, 326, 1, key="omr_first_y")
         bubble_gap_x = st.number_input("OMR: A-B-C-D зай", 20, 120, 54, 1, key="omr_gap_x")
         question_gap_y = st.number_input("OMR: Асуулт хоорондын зай", 15, 80, 39, 1, key="omr_gap_y")
         bubble_radius = st.number_input("OMR: Bubble radius", 6, 35, 16, 1, key="omr_radius")
         threshold_ratio = st.number_input("OMR: Таних мэдрэмж", 0.05, 0.70, 0.46, 0.01, key="omr_threshold")
-        show_шалгах горим = st.checkbox("OMR Debug View харуулах", value=True, key="omr_show_шалгах горим")
+        show_debug = st.checkbox("OMR шалгах горим View харуулах", value=True, key="omr_show_debug")
 
     img = np.array(image_pil.convert("RGB"))
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -696,7 +696,7 @@ def detect_omr_answers(image_pil, question_count):
 
     options = ["A", "B", "C", "D"]
     detected = []
-    шалгах горим = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
+    debug = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
 
     for q in range(int(question_count)):
         y = int(first_y + q * question_gap_y)
@@ -711,8 +711,8 @@ def detect_omr_answers(image_pil, question_count):
             total = np.pi * (int(bubble_radius) ** 2)
             ratio = filled / total
             scores.append(ratio)
-            cv2.circle(шалгах горим, (x, y), int(bubble_radius), (0, 255, 0), 2)
-            cv2.putText(шалгах горим, f"{ratio:.2f}", (x - 16, y + 34), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (0, 0, 255), 1)
+            cv2.circle(debug, (x, y), int(bubble_radius), (0, 255, 0), 2)
+            cv2.putText(debug, f"{ratio:.2f}", (x - 16, y + 34), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (0, 0, 255), 1)
 
         selected = [i for i, s in enumerate(scores) if s >= threshold_ratio]
 
@@ -720,7 +720,7 @@ def detect_omr_answers(image_pil, question_count):
             idx = selected[0]
             detected.append(options[idx])
             x = int(first_x + idx * bubble_gap_x)
-            cv2.circle(шалгах горим, (x, y), int(bubble_radius) + 5, (255, 0, 0), 3)
+            cv2.circle(debug, (x, y), int(bubble_radius) + 5, (255, 0, 0), 3)
         elif len(selected) > 1:
             detected.append("MULTI")
         else:
@@ -731,10 +731,10 @@ def detect_omr_answers(image_pil, question_count):
             else:
                 detected.append("")
 
-    if show_шалгах горим:
-        st.session_state.шалгах горим_image = cv2.cvtColor(шалгах горим, cv2.COLOR_BGR2RGB)
+    if show_debug:
+        st.session_state.debug_image = cv2.cvtColor(debug, cv2.COLOR_BGR2RGB)
     else:
-        st.session_state.шалгах горим_image = None
+        st.session_state.debug_image = None
 
     while len(detected) < question_count:
         detected.append("")
@@ -786,7 +786,7 @@ def generate_parent_report_pdf(report_text):
 
     c.setFillColor(colors.HexColor("#1F2937"))
     c.setFont(PDF_FONT, 18)
-    c.drawString(margin_left, y, "Teacher AI Parent Feedback Report")
+    c.drawString(margin_left, y, "Багшийн AI эцэг эхийн тайлан")
     y -= 8 * mm
     c.setStrokeColor(colors.HexColor("#CBD5E1"))
     c.line(margin_left, y, width - margin_right, y)
@@ -809,7 +809,7 @@ def generate_parent_report_pdf(report_text):
             c.line(margin_left, y, width - margin_right, y)
             y -= 6 * mm
             continue
-        if line.startswith("Bloom Analysis") or line.startswith("AI Recommendation"):
+        if line.startswith("Bloom түвшний шинжилгээ") or line.startswith("AI зөвлөмж"):
             y -= 3 * mm
             c.setFillColor(colors.HexColor("#111827"))
             c.setFont(PDF_FONT, 13)
@@ -838,7 +838,7 @@ def generate_parent_report_pdf(report_text):
 
     c.setFont(PDF_FONT, 8)
     c.setFillColor(colors.HexColor("#6B7280"))
-    c.drawString(margin_left, 12 * mm, "Generated by Teacher AI OMR")
+    c.drawString(margin_left, 12 * mm, "Багшийн AI OMR-оор үүсгэв")
     c.save()
     buffer.seek(0)
     return buffer
@@ -860,7 +860,7 @@ Bloom анализ:
 2. Сул тал
 3. Сайжруулах арга
 4. Багшид өгөх зөвлөгөө
-5. Сурагчид хэлэх эерэг feedback
+5. Сурагчид хэлэх эерэг санал зөвлөмж
 """
 
 
@@ -877,7 +877,7 @@ def make_parent_report_text(student_code, student_name, score, total, percent, b
 
 ========================================
 
-Bloom Analysis / Bloom түвшний шинжилгээ
+Bloom түвшний шинжилгээ / Bloom түвшний шинжилгээ
 
 ========================================
 
@@ -885,7 +885,7 @@ Bloom Analysis / Bloom түвшний шинжилгээ
 
 ========================================
 
-AI Recommendation / AI зөвлөмж
+AI зөвлөмж / AI зөвлөмж
 
 ========================================
 
@@ -905,7 +905,7 @@ def create_lxp_extension_zip():
         "manifest_version": 3,
         "name": "Teacher AI LXP Connector",
         "version": "1.5",
-        "description": "Teacher AI OMR Batch JSON-г clipboard/storage-оос уншаад LXP дээр Автоматаар бөглөх хийх connector.",
+        "description": "Teacher AI OMR Batch JSON-г clipboard/storage-оос уншаад LXP дээр AUTO FILL хийх connector.",
         "permissions": ["tabs", "scripting", "storage", "activeTab", "clipboardRead"],
         "host_permissions": [
             "http://localhost:8501/*",
@@ -950,10 +950,10 @@ def create_lxp_extension_zip():
   <div class="card">
     <h2> LXP Connector</h2>
     <p class="hint">
-      Үндсэн програм дээр <b>Бүх дүнг LXP рүү илгээх</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
+      Үндсэн програм дээр <b>БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
     </p>
 
-    <button id="fillLatestBtn">Автоматаар бөглөх LXP</button>
+    <button id="fillLatestBtn">LXP АВТОМАТААР БӨГЛӨХ</button>
 
     <div id="status"></div>
   </div>
@@ -994,7 +994,7 @@ fillLatestBtn.addEventListener("click", async () => {
     }
 
     if (!Array.isArray(payload) || payload.length === 0) {
-      showStatus("Batch JSON олдсонгүй. Бүх дүнг LXP рүү илгээх дарсны дараа дахин Автоматаар бөглөх LXP дарна уу.", true);
+      showStatus("Batch JSON олдсонгүй. БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дарсны дараа дахин LXP АВТОМАТААР БӨГЛӨХ дарна уу.", true);
       return;
     }
 
@@ -1273,9 +1273,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 ## Workflow
 1. Streamlit дээр Дүнгийн багц үүсгэнэ.
-2. Бүх дүнг LXP рүү илгээх дарна. Энэ үед JSON clipboard руу copy болно.
-3. LXP tab дээр extension icon → Автоматаар бөглөх LXP дарна.
-4. Өргөтгөл clipboard/storage-оос JSON уншаад LXP дээр бөглөнө.
+2. БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дарна. Энэ үед JSON clipboard руу copy болно.
+3. LXP tab дээр extension icon → LXP АВТОМАТААР БӨГЛӨХ дарна.
+4. Extension clipboard/storage-оос JSON уншаад LXP дээр бөглөнө.
 
 Paste хийх шаардлагагүй.
 """
@@ -1421,207 +1421,104 @@ if st.session_state.current_page == "home":
     st.markdown(dedent("""
     <div class="dashboard-hero">
         <div class="dashboard-hero-content">
-
-            <div class="dashboard-title">
-                Багшийн Туслах Систем
-            </div>
-
+            <div class="dashboard-title">Багшийн Туслах Систем</div>
             <div class="dashboard-subtitle">
                 Багшийн AI OMR • LXP автоматаар бөглөх • Bloom шинжилгээ • AI тайлан
             </div>
-
             <div>
                 <span class="dashboard-badge badge-pink">AI OMR</span>
                 <span class="dashboard-badge badge-blue">Bloom шинжилгээ</span>
                 <span class="dashboard-badge badge-green">PDF тайлан</span>
                 <span class="dashboard-badge badge-orange">LXP автоматаар бөглөх</span>
             </div>
-
         </div>
     </div>
     """), unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
 
-    # =========================================
-    # CARD 1
-    # =========================================
     with c1:
-
         st.markdown(dedent("""
         <div class="feature-card">
-
-            <div class="feature-icon green">
-                📊
-            </div>
-
-            <div class="feature-title">
-                Даалгаврын анализ
-            </div>
-
+            <div class="feature-icon green">📊</div>
+            <div class="feature-title">Даалгаврын анализ</div>
             <div class="feature-text">
-                Шалгалтын дүн, сурагчийн ахиц,
-                ангийн гүйцэтгэл болон
-                даалгаврын анализ харах хэсэг.
+                Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
             </div>
-
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button(
-            "📊 Даалгаврын анализ нээх",
-            use_container_width=True,
-            key="home_assignment_analysis_open"
-        ):
+        if st.button("📊 Даалгаврын анализ нээх", use_container_width=True, key="home_assignment_analysis_open"):
             go_page("assignment_analysis")
 
-    # =========================================
-    # CARD 2
-    # =========================================
     with c2:
-
         st.markdown(dedent("""
         <div class="feature-card">
-
-            <div class="feature-icon blue">
-                📝
-            </div>
-
-            <div class="feature-title">
-                Тест засах
-            </div>
-
+            <div class="feature-icon blue">📝</div>
+            <div class="feature-title">Тест засах</div>
             <div class="feature-text">
-                OMR хариултын хуудасны зураг
-                upload хийж AI ашиглан
-                шалгалт засах хэсэг.
+                OMR хариултын хуудас зураг upload хийж AI ашиглан шалгалт засах хэсэг.
             </div>
-
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button(
-            "📝 Тест засах хэсэг",
-            use_container_width=True,
-            key="home_test_checker_open"
-        ):
+        if st.button("📝 Тест засах хэсэг", use_container_width=True, key="home_test_checker_open"):
             go_page("test_checker")
 
-    # =========================================
-    # CARD 3
-    # =========================================
     with c3:
-
         st.markdown(dedent("""
         <div class="feature-card">
-
-            <div class="feature-icon yellow">
-                📚
-            </div>
-
-            <div class="feature-title">
-                Хичээлийн төлөвлөгөө
-            </div>
-
+            <div class="feature-icon yellow">📚</div>
+            <div class="feature-title">Хичээлийн төлөвлөгөө</div>
             <div class="feature-text">
-                Жилийн төлөвлөгөө,
-                нэгж хичээл болон өдөр тутмын
-                бэлтгэл боловсруулах хэсэг.
+                Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл боловсруулах хэсэг.
             </div>
-
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button(
-            "📚 Хичээлийн төлөвлөгөө",
-            use_container_width=True,
-            key="home_lesson_plan_open"
-        ):
-            st.markdown("""
-            <meta http-equiv="refresh"
-            content="0; url=https://example.com/lesson-plan">
-            """, unsafe_allow_html=True)
+        if st.button("📚 Хичээлийн төлөвлөгөө", use_container_width=True, key="home_lesson_plan_open"):
+            st.markdown(dedent("""
+            <meta http-equiv="refresh" content="0; url=https://example.com/lesson-plan">
+            """), unsafe_allow_html=True)
 
-    # =========================================
-    # CARD 4
-    # =========================================
     with c4:
-
         st.markdown(dedent("""
         <div class="feature-card">
-
-            <div class="feature-icon purple">
-                🤖
-            </div>
-
-            <div class="feature-title">
-                Teacher AI OMR
-            </div>
-
+            <div class="feature-icon purple">🤖</div>
+            <div class="feature-title">Teacher AI OMR</div>
             <div class="feature-text">
-                Утасны камераар зураг авах →
-                AI шалгалт засах →
-                Bloom шинжилгээ →
-                Эцэг эхийн тайлан →
-                LXP автоматаар бөглөх workflow.
+                Утасны камераар зураг авах → AI шалгалт засах → Bloom шинжилгээ → Эцэг эхийн тайлан → LXP автоматаар бөглөх.
             </div>
-
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button(
-            "🤖 Teacher AI OMR нээх",
-            use_container_width=True,
-            key="home_teacher_ai_omr_open"
-        ):
+        if st.button("🤖 Teacher AI OMR нээх", use_container_width=True, key="home_teacher_ai_omr_open"):
             st.session_state.teacher_ai_mode = True
             go_page("teacher_ai_home")
 
-    # =========================================
-    # GUIDE SECTION
-    # =========================================
-
     st.markdown(dedent("""
     <div class="dashboard-guide">
-
-        <div class="guide-heading">
-            🚀 Ашиглах хамгийн энгийн дараалал
-        </div>
+        <div class="guide-heading">🚀 Ашиглах хамгийн энгийн дараалал</div>
 
         <div class="guide-item">
             <div class="guide-num">1</div>
-            <div class="guide-text">
-                Даалгаврын анализ хэсэгт
-                Excel файл upload хийж
-                анализ харна.
-            </div>
+            <div class="guide-text">Даалгаврын анализ хэсэгт Excel upload хийж анализ харна.</div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">2</div>
-            <div class="guide-text">
-                Тест засах хэсэгт OMR зураг
-                upload хийж AI grading хийнэ.
-            </div>
+            <div class="guide-text">Тест засах хэсэгт OMR зураг upload хийж AI үнэлгээ хийнэ.</div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">3</div>
-            <div class="guide-text">
-                Teacher AI OMR хэсэгт
-                Дүнгийн багц үүсгэнэ.
-            </div>
+            <div class="guide-text">Teacher AI OMR хэсэгт Дүнгийн багц үүсгэнэ.</div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">4</div>
-            <div class="guide-text">
-                SEND ALL TO LXP дарж
-                Chrome extension ашиглан
-                LXP рүү автоматаар бөглөнө.
-            </div>
+            <div class="guide-text">БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.</div>
         </div>
-
     </div>
     """), unsafe_allow_html=True)
 
@@ -1629,20 +1526,21 @@ if st.session_state.current_page == "home":
 
 
 
+
 if st.session_state.current_page == "teacher_ai_home":
     st.markdown(dedent("""
     <div class="hero-section">
-        <div class="hero-eyebrow">Teacher AI OMR • Дотоод систем</div>
-        <h1 class="hero-title">Teacher AI OMR үндсэн хэсэг</h1>
+        <div class="hero-eyebrow">Багшийн AI OMR • Дотоод систем</div>
+        <h1 class="hero-title">Багшийн AI OMR үндсэн хэсэг</h1>
         <p class="hero-subtitle">
             Энэ хэсэгт Excel дүнгээ дүнгийн багц болгох, OMR хариултын хуудас засах,
-            answer sheet PDF татах, LXP connector extension татах боломжтой.
+            хариултын хуудасны PDF татах, LXP холбогч өргөтгөл татах боломжтой.
         </p>
         <div class="hero-badges">
             <span class="hero-badge">📁 Excel → Дүнгийн багц</span>
             <span class="hero-badge">📷 OMR шалгалт засах</span>
-            <span class="hero-badge">📝 Answer sheet PDF</span>
-            <span class="hero-badge">🧩 LXP Өргөтгөл</span>
+            <span class="hero-badge">📝 Хариултын хуудасны PDF</span>
+            <span class="hero-badge">🧩 LXP өргөтгөл</span>
         </div>
     </div>
     """), unsafe_allow_html=True)
@@ -1651,13 +1549,13 @@ if st.session_state.current_page == "teacher_ai_home":
 
     with c1:
         st.markdown(dedent("""
-        <div class="ажиллах дараалал-card">
-            <div class="ажиллах дараалал-icon icon-excel">📁</div>
+        <div class="workflow-card">
+            <div class="workflow-icon icon-excel">📁</div>
             <h3>Бэлэн Excel → Дүнгийн багц</h3>
-            <p>Excel файл байршуулах хийж сурагчийн код, нэр, онооны баганыг сонгоод LXP-д бэлэн дүнгийн багц үүсгэнэ.</p>
-            <span class="ажиллах дараалал-tag">Excel</span>
-            <span class="ажиллах дараалал-tag">Score validation</span>
-            <span class="ажиллах дараалал-tag">LXP-ready</span>
+            <p>Excel файл upload хийж сурагчийн код, нэр, онооны баганыг сонгоод LXP-д бэлэн дүнгийн багц үүсгэнэ.</p>
+            <span class="workflow-tag">Excel</span>
+            <span class="workflow-tag">Оноо шалгах</span>
+            <span class="workflow-tag">LXP-д бэлэн</span>
         </div>
         """), unsafe_allow_html=True)
         if st.button("📁 Excel хэсэг рүү орох", use_container_width=True, key="teacher_ai_excel_open"):
@@ -1665,13 +1563,13 @@ if st.session_state.current_page == "teacher_ai_home":
 
     with c2:
         st.markdown(dedent("""
-        <div class="ажиллах дараалал-card">
-            <div class="ажиллах дараалал-icon icon-omr">📷</div>
+        <div class="workflow-card">
+            <div class="workflow-icon icon-omr">📷</div>
             <h3>Хариултын хуудас засах</h3>
-            <p>Зөв хариултын Excel болон сурагчийн answer sheet зураг байршуулах хийж AI урьдчилсан үнэлгээ хийнэ.</p>
-            <span class="ажиллах дараалал-tag">AI grading</span>
-            <span class="ажиллах дараалал-tag">Teacher шалгах</span>
-            <span class="ажиллах дараалал-tag">Bloom</span>
+            <p>Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж AI урьдчилсан үнэлгээ хийнэ.</p>
+            <span class="workflow-tag">AI үнэлгээ</span>
+            <span class="workflow-tag">Багш шалгах</span>
+            <span class="workflow-tag">Bloom</span>
         </div>
         """), unsafe_allow_html=True)
         if st.button("📷 OMR хэсэг рүү орох", use_container_width=True, key="teacher_ai_omr_open"):
@@ -1681,12 +1579,12 @@ if st.session_state.current_page == "teacher_ai_home":
 
     with c3:
         st.markdown(dedent("""
-        <div class="ажиллах дараалал-card">
-            <div class="ажиллах дараалал-icon icon-sheet">📝</div>
+        <div class="workflow-card">
+            <div class="workflow-icon icon-sheet">📝</div>
             <h3>Хариултын хуудас татах</h3>
-            <p>Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF үүсгэнэ.</p>
-            <span class="ажиллах дараалал-tag">PDF</span>
-            <span class="ажиллах дараалал-tag">Printable</span>
+            <p>Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR хариултын хуудасны PDF үүсгэнэ.</p>
+            <span class="workflow-tag">PDF</span>
+            <span class="workflow-tag">Printable</span>
         </div>
         """), unsafe_allow_html=True)
         if st.button("📝 PDF татах хэсэг", use_container_width=True, key="teacher_ai_answer_sheet_open"):
@@ -1694,15 +1592,15 @@ if st.session_state.current_page == "teacher_ai_home":
 
     with c4:
         st.markdown(dedent("""
-        <div class="ажиллах дараалал-card">
-            <div class="ажиллах дараалал-icon icon-ext">🧩</div>
-            <h3>LXP Connector Өргөтгөл</h3>
+        <div class="workflow-card">
+            <div class="workflow-icon icon-ext">🧩</div>
+            <h3>LXP Connector Extension</h3>
             <p>Chrome extension татаж суулгаад дүнгийн багцыг LXP рүү автоматаар бөглөнө.</p>
-            <span class="ажиллах дараалал-tag">Chrome</span>
-            <span class="ажиллах дараалал-tag">Auto fill</span>
+            <span class="workflow-tag">Chrome</span>
+            <span class="workflow-tag">Автоматаар бөглөх</span>
         </div>
         """), unsafe_allow_html=True)
-        if st.button("🧩 Өргөтгөл хэсэг", use_container_width=True, key="teacher_ai_extension_open"):
+        if st.button("🧩 Extension хэсэг", use_container_width=True, key="teacher_ai_extension_open"):
             go_page("extension")
 
     st.stop()
@@ -1726,7 +1624,7 @@ if st.session_state.current_page == "answer_sheet":
         page_pdf = generate_answer_sheet_pdf(page_q_count)
 
         st.download_button(
-            label="📥 OMR Хариултын хуудас PDF татах",
+            label="📥 OMR Answer Sheet PDF татах",
             data=page_pdf,
             file_name=f"OMR_{page_q_count}Q.pdf",
             mime="application/pdf",
@@ -1761,8 +1659,8 @@ if st.session_state.current_page == "extension":
 3. `Developer mode` асаана.  
 4. `Load unpacked` дарна.  
 5. Задалсан `lxp_clipboard_connector` folder-ийг сонгоно.  
-6. Streamlit дээр `Бүх дүнг LXP рүү илгээх` дарна.  
-7. LXP дээр extension icon → `Автоматаар бөглөх LXP` дарна.  
+6. Streamlit дээр `БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ` дарна.  
+7. LXP дээр extension icon → `LXP АВТОМАТААР БӨГЛӨХ` дарна.  
 """)
 
 
@@ -1800,22 +1698,22 @@ if app_mode == "📷 OMR шалгалт засах → LXP":
             )
 
         with omr_set_col2:
-            урьдчилан харах_width = st.slider(
-                "Pшалгах зурагны өргөн",
+            preview_width = st.slider(
+                "Урьдчилан харах зурагны өргөн",
                 min_value=500,
                 max_value=1400,
                 value=1050,
                 step=50,
-                key="omr_page_урьдчилан харах_width"
+                key="omr_page_preview_width"
             )
 
     col1, col2 = st.columns(2)
 
     with col1:
-        answer_excel = st.file_байршуулахer("Зөв хариултын Excel", type=["xlsx"])
+        answer_excel = st.file_uploader("Зөв хариултын Excel", type=["xlsx"])
 
     with col2:
-        answer_img = st.file_байршуулахer("Сурагчийн зураг", type=["jpg", "jpeg", "png"])
+        answer_img = st.file_uploader("Сурагчийн зураг", type=["jpg", "jpeg", "png"])
 
     student_code = st.text_input("Сурагчийн код", value="NEST25080001")
     student_name = st.text_input("Сурагчийн нэр", value="Сурагч")
@@ -1830,7 +1728,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
     st.markdown("## 📁 Бэлэн Excel дүн → Дүнгийн багц үүсгэх")
 
     with st.container(border=True):
-        lxp_excel = st.file_байршуулахer(
+        lxp_excel = st.file_uploader(
             "LXP-д шууд оруулах Excel файл",
             type=["xlsx"],
             key="direct_lxp_excel",
@@ -1852,21 +1750,21 @@ if app_mode == "📁 Бэлэн Excel → LXP":
 
             with col_map1:
                 code_col = st.selectbox(
-                    "Student code column",
+                    "Сурагчийн кодын багана",
                     cols,
                     key="direct_lxp_code_col",
                 )
 
             with col_map2:
                 name_col = st.selectbox(
-                    "Student name column",
+                    "Сурагчийн нэрийн багана",
                     cols,
                     key="direct_lxp_name_col",
                 )
 
             with col_map3:
                 score_col = st.selectbox(
-                    "Score column",
+                    "Онооны багана",
                     cols,
                     key="direct_lxp_score_col",
                 )
@@ -1877,7 +1775,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                 "Score": lxp_df_original[score_col],
             })
 
-            st.markdown("### ✅ LXP Ready Pшалгах")
+            st.markdown("### ✅ LXP-д бэлэн урьдчилсан харагдац")
 
             st.dataframe(
                 lxp_ready_df,
@@ -1941,7 +1839,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
            
 
         else:
-            st.info("LXP-д оруулах Excel файлаа байршуулах хийнэ үү.")
+            st.info("LXP-д оруулах Excel файлаа upload хийнэ үү.")
 
     st.subheader("📋 Дүнгийн багц / LXP Fill")
 
@@ -1955,7 +1853,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
 <script>
 const LXP_PAYLOAD = {payload_json};
 
-function postToӨргөтгөл(action) {{
+function postToExtension(action) {{
     const msg = {{
         source: "TEACHER_AI",
         action: action,
@@ -1967,10 +1865,10 @@ function postToӨргөтгөл(action) {{
     try {{ window.top.postMessage(msg, "*"); }} catch(e) {{}}
 }}
 
-postToӨргөтгөл("SAVE_LXP_PAYLOAD");
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 500);
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 1500);
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 3000);
+postToExtension("SAVE_LXP_PAYLOAD");
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 1500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
 </script>
 <button onclick="sendAllToLXP()"
     style="
@@ -1984,7 +1882,7 @@ setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 3000);
         font-size:16px;
         width:100%;
     ">
-    Бүх дүнг LXP рүү илгээх
+    БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ
 </button>
 
 <script>
@@ -1997,15 +1895,15 @@ async function sendAllToLXP(){{
         console.log("Clipboard copy failed", e);
     }}
 
-    postToӨргөтгөл("SEND_TO_LXP");
-    alert("Дүнгийн багц хадгалагдлаа. Одоо LXP tab дээр extension → Автоматаар бөглөх LXP дарна.");
+    postToExtension("SEND_TO_LXP");
+    alert("Дүнгийн багц хадгалагдлаа. Одоо LXP tab дээр extension → LXP АВТОМАТААР БӨГЛӨХ дарна.");
 }}
 </script>
 """,
             height=80,
         )
 
-        if st.button("Багц цэвэрлэх", key="direct_clear_batch_bottom"):
+        if st.button("ДҮНГИЙН БАГЦ ЦЭВЭРЛЭХ", key="direct_clear_batch_bottom"):
             st.session_state.batch_results = []
             st.rerun()
     else:
@@ -2039,12 +1937,12 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
         rotate_col1, rotate_col2, rotate_col3, rotate_col4 = st.columns(4)
 
         with rotate_col1:
-            if st.button("↩ 90° Left", key="rotate_left"):
+            if st.button("↩ 90° зүүн", key="rotate_left"):
                 st.session_state.rotation_angle += 90
                 st.rerun()
 
         with rotate_col2:
-            if st.button("↪ 90° Right", key="rotate_right"):
+            if st.button("↪ 90° баруун", key="rotate_right"):
                 st.session_state.rotation_angle -= 90
                 st.rerun()
 
@@ -2054,7 +1952,7 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
                 st.rerun()
 
         with rotate_col4:
-            if st.button("Reset", key="rotate_reset"):
+            if st.button("Анхны төлөв", key="rotate_reset"):
                 st.session_state.rotation_angle = 0
                 st.rerun()
 
@@ -2068,7 +1966,7 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
 
     # =========================================
     # CROP CONTROLS
-    # Зураг байршуулах хийсэн хэсэг дээр crop хийж, OMR-г crop/rotate хийсэн зураг дээр уншуулна
+    # Зураг upload хийсэн хэсэг дээр crop хийж, OMR-г crop/rotate хийсэн зураг дээр уншуулна
     # =========================================
 
     with st.container(border=True):
@@ -2114,31 +2012,31 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
     # IMAGE + DEBUG PREVIEW
     # =========================================
 
-    урьдчилан харах_col1, урьдчилан харах_col2 = st.columns(2)
+    preview_col1, preview_col2 = st.columns(2)
 
-    with урьдчилан харах_col1:
+    with preview_col1:
         with st.container(border=True):
-            st.subheader("1. Uploaded Image")
-            st.caption("Сурагчийн answer sheet урьдчилан харах")
+            st.subheader("1. Байршуулсан зураг")
+            st.caption("Сурагчийн хариултын хуудасны урьдчилсан харагдац")
 
             st.image(
                 display_image,
-                width=урьдчилан харах_width
+                width=preview_width
             )
 
-    with урьдчилан харах_col2:
+    with preview_col2:
         with st.container(border=True):
-            st.subheader("OMR Debug Pшалгах")
+            st.subheader("OMR шалгах горим Preview")
             st.caption("Ногоон bubble дээр яг таарч байвал зөв уншиж байна.")
 
-            if st.session_state.шалгах горим_image is not None:
-                шалгах горим_урьдчилан харах = Image.fromarray(
-                    st.session_state.шалгах горим_image
+            if st.session_state.debug_image is not None:
+                debug_preview = Image.fromarray(
+                    st.session_state.debug_image
                 )
 
                 st.image(
-                    шалгах горим_урьдчилан харах,
-                    width=урьдчилан харах_width
+                    debug_preview,
+                    width=preview_width
                 )
 
             else:
@@ -2163,17 +2061,17 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
 
     with row2_col1:
         with st.container(border=True):
-            st.subheader("2. AI Grading Result")
+            st.subheader("2. AI үнэлгээний үр дүн")
             st.dataframe(result_df, use_container_width=True, height=760, hide_index=True)
 
     with row2_col2:
         with st.container(border=True):
-            st.subheader("3. Teacher Review")
-            шалгах_mode = st.radio(
-                "Review хийх хэлбэр",
+            st.subheader("3. Багшийн хяналт")
+            review_mode = st.radio(
+                "Хянах хэлбэр",
                 ["Бүх хариулт", "Зөвхөн буруу хариулт"],
                 horizontal=True,
-                key="шалгах_mode",
+                key="review_mode",
             )
 
             final_answers = ai_answers[: len(results)]
@@ -2188,7 +2086,7 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
                     if is_wrong:
                         wrong_count += 1
 
-                    if шалгах_mode == "Зөвхөн буруу хариулт" and not is_wrong:
+                    if review_mode == "Зөвхөн буруу хариулт" and not is_wrong:
                         continue
 
                     default_index = 0
@@ -2199,11 +2097,11 @@ if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and
                         f"Q{i + 1} | AI: {ai}",
                         ["", "A", "B", "C", "D"],
                         index=default_index,
-                        key=f"шалгах_filter_{i}",
+                        key=f"review_filter_{i}",
                     )
                     final_answers[i] = selected if selected != "" else ai
 
-            if шалгах_mode == "Зөвхөн буруу хариулт":
+            if review_mode == "Зөвхөн буруу хариулт":
                 st.info(f"Буруу эсвэл шалгах шаардлагатай: {wrong_count} асуулт")
 
     final_scores = []
@@ -2290,7 +2188,7 @@ Bloom түвшин ахиулах шаталсан даалгавар өгөх
         full_name = BLOOM_FULL.get(k, k)
         bloom_summary += f"{full_name}: {v}%\n"
 
-    st.subheader("7. Gemini + ChatGPT AI Recommendation")
+    st.subheader("7. Gemini + ChatGPT AI зөвлөмж")
 
     if st.button("AI зөвлөмж үүсгэх"):
         prompt = make_prompt(bloom_stats, percent, student_name)
@@ -2427,15 +2325,15 @@ ChatGPT AI зөвлөмж:
     if st.session_state.parent_report_text == "":
         st.session_state.parent_report_text = default_parent_text
 
-    parent_шалгах_text = st.text_area(
+    parent_review_text = st.text_area(
         "Parent Report Text",
         value=st.session_state.parent_report_text,
         height=650,
         label_visibility="collapsed",
     )
 
-    st.session_state.parent_report_text = parent_шалгах_text
-    parent_pdf = generate_parent_report_pdf(parent_шалгах_text)
+    st.session_state.parent_report_text = parent_review_text
+    parent_pdf = generate_parent_report_pdf(parent_review_text)
 
     st.download_button(
         label="📥 Зассан Parent Report PDF татах",
@@ -2463,8 +2361,8 @@ ChatGPT AI зөвлөмж:
 
     with st.expander("📁 LXP Batch Excel Mapping", expanded=False):
 
-        lxp_excel = st.file_байршуулахer(
-            "LXP batch excel байршуулах",
+        lxp_excel = st.file_uploader(
+            "LXP batch excel upload",
             type=["xlsx"],
             key="lxp_batch_excel"
         )
@@ -2486,21 +2384,21 @@ ChatGPT AI зөвлөмж:
 
             with col_map1:
                 code_col = st.selectbox(
-                    "Student code column",
+                    "Сурагчийн кодын багана",
                     cols,
                     key="lxp_code_col"
                 )
 
             with col_map2:
                 name_col = st.selectbox(
-                    "Student name column",
+                    "Сурагчийн нэрийн багана",
                     cols,
                     key="lxp_name_col"
                 )
 
             with col_map3:
                 score_col = st.selectbox(
-                    "Score column",
+                    "Онооны багана",
                     cols,
                     key="lxp_score_col"
                 )
@@ -2511,7 +2409,7 @@ ChatGPT AI зөвлөмж:
                 "Score": lxp_df_original[score_col]
             })
 
-            st.markdown("### ✅ LXP Ready Pшалгах")
+            st.markdown("### ✅ LXP-д бэлэн урьдчилсан харагдац")
 
             st.dataframe(
                 lxp_ready_df,
@@ -2582,7 +2480,7 @@ ChatGPT AI зөвлөмж:
 <script>
 const LXP_PAYLOAD = {payload_json};
 
-function postToӨргөтгөл(action) {{
+function postToExtension(action) {{
     const msg = {{
         source: "TEACHER_AI",
         action: action,
@@ -2594,10 +2492,10 @@ function postToӨргөтгөл(action) {{
     try {{ window.top.postMessage(msg, "*"); }} catch(e) {{}}
 }}
 
-postToӨргөтгөл("SAVE_LXP_PAYLOAD");
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 500);
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 1500);
-setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 3000);
+postToExtension("SAVE_LXP_PAYLOAD");
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 1500);
+setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
 </script>
 <button onclick="sendAllToLXP()"
     style="
@@ -2611,7 +2509,7 @@ setTimeout(() => postToӨргөтгөл("SAVE_LXP_PAYLOAD"), 3000);
         font-size:16px;
         width:100%;
     ">
-    Бүх дүнг LXP рүү илгээх
+    БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ
 </button>
 
 <script>
@@ -2624,15 +2522,15 @@ async function sendAllToLXP(){{
         console.log("Clipboard copy failed", e);
     }}
 
-    postToӨргөтгөл("SEND_TO_LXP");
-    alert("Дүнгийн багц clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → Автоматаар бөглөх LXP дарна.");
+    postToExtension("SEND_TO_LXP");
+    alert("Дүнгийн багц clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → LXP АВТОМАТААР БӨГЛӨХ дарна.");
 }}
 </script>
 """,
             height=80,
         )
 
-        if st.button("Багц цэвэрлэх"):
+        if st.button("ДҮНГИЙН БАГЦ ЦЭВЭРЛЭХ"):
             st.session_state.batch_results = []
             st.rerun()
     else:
