@@ -564,6 +564,8 @@ if "rotation_angle" not in st.session_state:
     st.session_state.rotation_angle = 0
 if "current_page" not in st.session_state:
     st.session_state.current_page = "home"
+if "teacher_ai_mode" not in st.session_state:
+    st.session_state.teacher_ai_mode = False
 
 
 def generate_answer_sheet_pdf(question_count):
@@ -1304,84 +1306,38 @@ def go_page(page_name):
     st.rerun()
 
 
-with st.sidebar:
-    st.markdown(dedent("""
-    <div class="sidebar-brand">
-        <div class="sidebar-logo">🎓</div>
-        <div>
-            <div class="sidebar-title">Teacher AI OMR</div>
-            <div class="sidebar-subtitle">Багшийн Туслах Систем</div>
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
+if st.session_state.teacher_ai_mode:
+    with st.sidebar:
+        st.divider()
+        st.subheader("Үндсэн цэс")
 
-    st.divider()
-    st.subheader("Үндсэн цэс")
-
-    if st.button("🏠 Нүүр хуудас", use_container_width=True, key="sidebar_home_btn"):
-        go_page("home")
-
-    if st.button("📊 Даалгаврын анализ", use_container_width=True, key="sidebar_assignment_analysis_btn"):
-        go_page("assignment_analysis")
-
-    if st.button("📝 Тест засах", use_container_width=True, key="sidebar_test_checker_btn"):
-        go_page("test_checker")
-
-    if st.button("📁 Бэлэн Excel → Дүнгийн багц", use_container_width=True, key="sidebar_excel_btn"):
-        go_page("excel")
-
-    if st.button("📷 Хариултын хуудас засах", use_container_width=True, key="sidebar_omr_btn"):
-        go_page("omr")
-
-    if st.button("📝 Хариултын хуудас татах", use_container_width=True, key="sidebar_answer_sheet_btn"):
-        go_page("answer_sheet")
-
-    if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
-        go_page("extension")
-
-    st.markdown(dedent("""
-    <div class="sidebar-help">
-        <b>💡 Тусламж</b><br>
-        Асуулт байвал support@example.com хаягаар холбогдоно уу.
-    </div>
-    """), unsafe_allow_html=True)
-
-
-if st.session_state.current_page == "assignment_analysis":
-    top_col1, top_col2 = st.columns([1, 5])
-    with top_col1:
-        if st.button("⬅️ Нүүр хуудас", use_container_width=True, key="back_home_from_assignment"):
+        if st.button("🏠 Үндсэн нүүр", use_container_width=True, key="sidebar_public_home_btn"):
+            st.session_state.teacher_ai_mode = False
             go_page("home")
-    with top_col2:
-        st.markdown("## 📊 Даалгаврын анализ")
-        st.caption("Grade Viewer системийн даалгаврын анализ хэсэг.")
 
-    components.iframe(
-        "https://kholboo.github.io/Grade-Viewer/Grade_viewer/exam-analysis.html",
-        height=900,
-        scrolling=True,
-    )
+        if st.button("🤖 Teacher AI OMR", use_container_width=True, key="sidebar_teacher_ai_home_btn"):
+            st.session_state.teacher_ai_mode = True
+            go_page("teacher_ai_home")
 
-    st.stop()
+        if st.button("📁 Бэлэн Excel → Дүнгийн багц", use_container_width=True, key="sidebar_excel_btn"):
+            go_page("excel")
 
+        if st.button("📷 Хариултын хуудас засах", use_container_width=True, key="sidebar_omr_btn"):
+            go_page("omr")
 
-if st.session_state.current_page == "test_checker":
-    top_col1, top_col2 = st.columns([1, 5])
-    with top_col1:
-        if st.button("⬅️ Нүүр хуудас", use_container_width=True, key="back_home_from_test_checker"):
+        if st.button("📝 Хариултын хуудас татах", use_container_width=True, key="sidebar_answer_sheet_btn"):
+            go_page("answer_sheet")
+
+        if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
+            go_page("extension")
+
+else:
+    with st.sidebar:
+        st.markdown("### 🎓 Багшийн Туслах Систем")
+        st.caption("Үндсэн хэсгээс хэрэгслээ сонгоно уу.")
+        st.divider()
+        if st.button("🏠 Нүүр хуудас", use_container_width=True, key="landing_home_btn"):
             go_page("home")
-    with top_col2:
-        st.markdown("## 📝 Тест засах")
-        st.caption("Grade Viewer системийн тест засах хэсэг.")
-
-    components.iframe(
-        "https://kholboo.github.io/Grade-Viewer/Test_checker/TestCheckerAI.html",
-        height=900,
-        scrolling=True,
-    )
-
-    st.stop()
-
 
 if st.session_state.current_page == "home":
 
@@ -1460,9 +1416,8 @@ if st.session_state.current_page == "home":
         """), unsafe_allow_html=True)
 
         if st.button("🤖 Teacher AI OMR нээх", use_container_width=True, key="home_teacher_ai_omr_open"):
-            st.markdown(dedent("""
-            <meta http-equiv="refresh" content="0; url=https://mctkflqgtmugzcwxrgjhnr.streamlit.app/">
-            """), unsafe_allow_html=True)
+            st.session_state.teacher_ai_mode = True
+            go_page("teacher_ai_home")
 
     st.markdown(dedent("""
     <div class="dashboard-guide">
@@ -1489,6 +1444,87 @@ if st.session_state.current_page == "home":
         </div>
     </div>
     """), unsafe_allow_html=True)
+
+    st.stop()
+
+
+
+
+if st.session_state.current_page == "teacher_ai_home":
+    st.markdown(dedent("""
+    <div class="hero-section">
+        <div class="hero-eyebrow">Teacher AI OMR • Дотоод систем</div>
+        <h1 class="hero-title">Teacher AI OMR үндсэн хэсэг</h1>
+        <p class="hero-subtitle">
+            Энэ хэсэгт Excel дүнгээ дүнгийн багц болгох, OMR хариултын хуудас засах,
+            answer sheet PDF татах, LXP connector extension татах боломжтой.
+        </p>
+        <div class="hero-badges">
+            <span class="hero-badge">📁 Excel → Дүнгийн багц</span>
+            <span class="hero-badge">📷 OMR шалгалт засах</span>
+            <span class="hero-badge">📝 Answer sheet PDF</span>
+            <span class="hero-badge">🧩 LXP Extension</span>
+        </div>
+    </div>
+    """), unsafe_allow_html=True)
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        st.markdown(dedent("""
+        <div class="workflow-card">
+            <div class="workflow-icon icon-excel">📁</div>
+            <h3>Бэлэн Excel → Дүнгийн багц</h3>
+            <p>Excel файл upload хийж сурагчийн код, нэр, онооны баганыг сонгоод LXP-д бэлэн дүнгийн багц үүсгэнэ.</p>
+            <span class="workflow-tag">Excel</span>
+            <span class="workflow-tag">Score validation</span>
+            <span class="workflow-tag">LXP-ready</span>
+        </div>
+        """), unsafe_allow_html=True)
+        if st.button("📁 Excel хэсэг рүү орох", use_container_width=True, key="teacher_ai_excel_open"):
+            go_page("excel")
+
+    with c2:
+        st.markdown(dedent("""
+        <div class="workflow-card">
+            <div class="workflow-icon icon-omr">📷</div>
+            <h3>Хариултын хуудас засах</h3>
+            <p>Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж AI урьдчилсан үнэлгээ хийнэ.</p>
+            <span class="workflow-tag">AI grading</span>
+            <span class="workflow-tag">Teacher review</span>
+            <span class="workflow-tag">Bloom</span>
+        </div>
+        """), unsafe_allow_html=True)
+        if st.button("📷 OMR хэсэг рүү орох", use_container_width=True, key="teacher_ai_omr_open"):
+            go_page("omr")
+
+    c3, c4 = st.columns(2)
+
+    with c3:
+        st.markdown(dedent("""
+        <div class="workflow-card">
+            <div class="workflow-icon icon-sheet">📝</div>
+            <h3>Хариултын хуудас татах</h3>
+            <p>Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF үүсгэнэ.</p>
+            <span class="workflow-tag">PDF</span>
+            <span class="workflow-tag">Printable</span>
+        </div>
+        """), unsafe_allow_html=True)
+        if st.button("📝 PDF татах хэсэг", use_container_width=True, key="teacher_ai_answer_sheet_open"):
+            go_page("answer_sheet")
+
+    with c4:
+        st.markdown(dedent("""
+        <div class="workflow-card">
+            <div class="workflow-icon icon-ext">🧩</div>
+            <h3>LXP Connector Extension</h3>
+            <p>Chrome extension татаж суулгаад дүнгийн багцыг LXP рүү автоматаар бөглөнө.</p>
+            <span class="workflow-tag">Chrome</span>
+            <span class="workflow-tag">Auto fill</span>
+        </div>
+        """), unsafe_allow_html=True)
+        if st.button("🧩 Extension хэсэг", use_container_width=True, key="teacher_ai_extension_open"):
+            go_page("extension")
 
     st.stop()
 
