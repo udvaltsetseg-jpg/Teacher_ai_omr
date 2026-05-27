@@ -447,26 +447,21 @@ st.markdown(dedent("""
 
 .feature-card{
     background:white;
-
     border-radius:28px;
-
-    padding:28px 24px;
-
+    padding:24px 22px;
     box-shadow:0 8px 30px rgba(0,0,0,0.06);
-
     border:1px solid #edf1f7;
-
     transition:0.25s;
 
     text-align:center;
-
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center;
 
-    min-height:520px;
+    min-height:360px;
 }
+
 .feature-card:hover{
     transform:translateY(-5px);
     box-shadow:0 24px 48px rgba(15,23,42,.10);
@@ -490,27 +485,19 @@ st.markdown(dedent("""
 
 .feature-title{
     font-size:22px;
-
     font-weight:800;
-
     color:#172033;
-
-    margin-bottom:18px;
-
+    margin:16px 0 12px 0;
     text-align:center;
-
-    line-height:1.4;
+    line-height:1.25;
 }
+
 .feature-text{
     color:#5f6b7a;
-
     font-size:15px;
-
-    line-height:1.9;
-
+    line-height:1.55;
     text-align:center;
-
-    margin-bottom:20px;
+    margin:0;
 }
 
 .dashboard-guide{
@@ -1444,20 +1431,14 @@ if st.session_state.current_page == "test_checker":
 st.markdown(dedent("""
 <style>
 .feature-image{
-    width:84px;
-    height:84px;
-
-    margin:0 auto 18px auto;
-
-    border-radius:20px;
-
+    width:78px;
+    height:78px;
+    margin:0 auto 14px auto;
+    border-radius:18px;
     background-size:cover;
     background-position:center;
-
     border:4px solid #FFFFFF;
-
     box-shadow:0 10px 24px rgba(0,0,0,0.12);
-
     display:block;
 }
 
