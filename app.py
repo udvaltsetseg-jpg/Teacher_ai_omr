@@ -1087,7 +1087,7 @@ with st.sidebar:
 if st.session_state.current_page == "home":
     st.markdown("""
 <div class="hero-section">
-    <div class="hero-eyebrow">NEST Teacher AI OMR • LXP workflow</div>
+    <div class="hero-eyebrow">Teacher AI OMR • LXP workflow</div>
     <h1 class="hero-title">Шалгалт засах, Bloom шинжилгээ хийх, LXP рүү дүн оруулах ажлыг нэг дор</h1>
     <p class="hero-subtitle">
         Бэлэн Excel дүнгээ дүнгийн багц болгох, answer sheet зураг засах, эцэг эхийн тайлан гаргах,
