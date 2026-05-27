@@ -518,7 +518,7 @@ def create_lxp_extension_zip():
   <div class="card">
     <h2> LXP Connector</h2>
     <p class="hint">
-      Streamlit дээр <b>SEND ALL TO LXP</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
+      Үндсэн програм дээр <b>SEND ALL TO LXP</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
     </p>
 
     <button id="fillLatestBtn">AUTO FILL LXP</button>
