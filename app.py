@@ -1174,7 +1174,7 @@ if st.session_state.current_page == "home":
     <span class="workflow-tag">0–100 check</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
+        if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn_2"):
             go_page("extension")
 
     st.markdown('<div class="section-title">Ашиглах хамгийн энгийн дараалал</div>', unsafe_allow_html=True)
