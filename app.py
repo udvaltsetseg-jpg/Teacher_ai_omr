@@ -142,6 +142,162 @@ div[data-testid="stMetric"] {
     font-size:13px;
 }
 
+
+.hero-section {
+    background: linear-gradient(135deg, #FFF7ED 0%, #EEF3FF 45%, #F0FDFA 100%);
+    border: 1px solid #E5E7EB;
+    border-radius: 28px;
+    padding: 34px 38px;
+    margin-bottom: 26px;
+    box-shadow: 0 16px 42px rgba(15, 23, 42, 0.07);
+}
+.hero-eyebrow {
+    display: inline-block;
+    background: #111827;
+    color: #FFFFFF;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+.hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.16;
+    color: #111827;
+    margin: 0;
+}
+.hero-subtitle {
+    color: #4B5563;
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 920px;
+    margin-top: 14px;
+}
+.hero-badges {
+    margin-top: 18px;
+}
+.hero-badge {
+    display: inline-block;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 999px;
+    padding: 8px 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 750;
+    color: #374151;
+}
+.workflow-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 24px;
+    padding: 24px 24px 18px 24px;
+    min-height: 215px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.045);
+    transition: 0.18s ease-in-out;
+}
+.workflow-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.08);
+}
+.workflow-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 14px;
+}
+.icon-excel { background: #DCFCE7; }
+.icon-omr { background: #DBEAFE; }
+.icon-sheet { background: #FEF3C7; }
+.icon-ext { background: #FCE7F3; }
+.workflow-card h3 {
+    margin: 0 0 10px 0;
+    color: #111827;
+    font-size: 23px;
+    font-weight: 900;
+}
+.workflow-card p {
+    color: #6B7280;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+.workflow-tag {
+    display: inline-block;
+    background: #F3F4F6;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 750;
+    padding: 6px 10px;
+    border-radius: 999px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+.section-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #111827;
+    margin: 30px 0 14px 0;
+}
+.step-box {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+.step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px dashed #E5E7EB;
+}
+.step-row:last-child {
+    border-bottom: none;
+}
+.step-num {
+    min-width: 34px;
+    height: 34px;
+    background: #FF4B4B;
+    color: #FFFFFF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+.step-text {
+    color: #374151;
+    line-height: 1.6;
+    font-size: 15px;
+}
+.info-panel {
+    background: #F8FAFC;
+    border: 1px solid #E5E7EB;
+    border-radius: 22px;
+    padding: 22px;
+    min-height: 185px;
+}
+.info-panel h4 {
+    margin-top: 0;
+    font-size: 19px;
+    font-weight: 900;
+    color: #111827;
+}
+.info-panel p {
+    color: #6B7280;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -929,70 +1085,154 @@ with st.sidebar:
 
 
 if st.session_state.current_page == "home":
-    st.markdown("## Нүүр хуудас")
-    st.caption("Доорх хэсгээс хийх ажлаа сонгоно уу.")
+    st.markdown("""
+<div class="hero-section">
+    <div class="hero-eyebrow">NEST Teacher AI OMR • LXP workflow</div>
+    <h1 class="hero-title">Шалгалт засах, Bloom шинжилгээ хийх, LXP рүү дүн оруулах ажлыг нэг дор</h1>
+    <p class="hero-subtitle">
+        Бэлэн Excel дүнгээ Batch List болгох, answer sheet зураг засах, эцэг эхийн тайлан гаргах,
+        мөн Chrome extension ашиглан LXP рүү оноог автоматаар бөглөхөд зориулагдсан багшийн AI туслах систем.
+    </p>
+    <div class="hero-badges">
+        <span class="hero-badge">📁 Excel → Batch</span>
+        <span class="hero-badge">📷 OMR AI grading</span>
+        <span class="hero-badge">📊 Bloom analytics</span>
+        <span class="hero-badge">🧩 LXP autofill</span>
+        <span class="hero-badge">📝 Answer sheet PDF</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown('<div class="section-title">Юу хийх вэ?</div>', unsafe_allow_html=True)
 
     c1, c2 = st.columns(2)
 
     with c1:
         st.markdown("""
-<div class="nav-card">
-<h3>📁 Бэлэн Excel дүн → Batch үүсгэх</h3>
-<p>
-Бэлэн Excel файл upload хийж, сурагчийн код / нэр / онооны баганыг сонгоод
-LXP-д оруулах Batch List үүсгэнэ.
-</p>
+<div class="workflow-card">
+    <div class="workflow-icon icon-excel">📁</div>
+    <h3>Бэлэн Excel дүн → Batch үүсгэх</h3>
+    <p>
+        Excel файл upload хийгээд сурагчийн код, нэр, онооны баганыг сонгоно.
+        Систем LXP-д оруулахад бэлэн Batch List үүсгэнэ.
+    </p>
+    <span class="workflow-tag">Column mapping</span>
+    <span class="workflow-tag">Score validation</span>
+    <span class="workflow-tag">LXP-ready</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📁 Excel хэсэг рүү орох", use_container_width=True, type="primary"):
+        if st.button("📁 Excel дүнгээ оруулах", use_container_width=True, type="primary"):
             go_page("excel")
 
     with c2:
         st.markdown("""
-<div class="nav-card">
-<h3>📷 Хариултын хуудас засах</h3>
-<p>
-Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж,
-AI OMR шалгалт засна. Багш final review хийж болно.
-</p>
+<div class="workflow-card">
+    <div class="workflow-icon icon-omr">📷</div>
+    <h3>Хариултын хуудас засах</h3>
+    <p>
+        Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж,
+        AI-р урьдчилан засна. Багш final review хийж засварлах боломжтой.
+    </p>
+    <span class="workflow-tag">AI grading</span>
+    <span class="workflow-tag">Teacher review</span>
+    <span class="workflow-tag">Bloom report</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📷 OMR хэсэг рүү орох", use_container_width=True, type="primary"):
+        if st.button("📷 Answer sheet засах", use_container_width=True, type="primary"):
             go_page("omr")
 
     c3, c4 = st.columns(2)
 
     with c3:
         st.markdown("""
-<div class="nav-card">
-<h3>📝 Хариултын хуудас татах</h3>
-<p>
-Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF татна.
-</p>
+<div class="workflow-card">
+    <div class="workflow-icon icon-sheet">📝</div>
+    <h3>Хариултын хуудас татах</h3>
+    <p>
+        Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF үүсгэнэ.
+        Хэвлээд шалгалтад шууд ашиглаж болно.
+    </p>
+    <span class="workflow-tag">A4 PDF</span>
+    <span class="workflow-tag">1–200 асуулт</span>
+    <span class="workflow-tag">Printable</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("📝 PDF татах хэсэг", use_container_width=True):
+        if st.button("📝 Answer sheet PDF татах", use_container_width=True):
             go_page("answer_sheet")
 
     with c4:
         st.markdown("""
-<div class="nav-card">
-<h3>🧩 LXP Extension татах</h3>
-<p>
-Chrome extension татаж суулгаад, Batch List-ийн дүнг LXP рүү автоматаар бөглөнө.
-</p>
+<div class="workflow-card">
+    <div class="workflow-icon icon-ext">🧩</div>
+    <h3>LXP Connector Extension</h3>
+    <p>
+        Chrome extension суулгаснаар Batch List-ийн оноог LXP-ийн дүн оруулах
+        хүснэгт рүү автоматаар бөглөх боломжтой.
+    </p>
+    <span class="workflow-tag">Chrome extension</span>
+    <span class="workflow-tag">Auto fill</span>
+    <span class="workflow-tag">0–100 check</span>
 </div>
 """, unsafe_allow_html=True)
-        if st.button("🧩 Extension хэсэг", use_container_width=True):
+        if st.button("🧩 Extension татах", use_container_width=True):
             go_page("extension")
 
-    st.markdown("### Ашиглах хамгийн энгийн дараалал")
-    st.markdown("""
-<div class="quick-guide">
-<b>1.</b> Хэрвээ дүн Excel дээр бэлэн бол <b>Бэлэн Excel → Batch</b> хэсэг рүү орно.<br>
-<b>2.</b> Хэрвээ зурагтай answer sheet засах бол <b>Хариултын хуудас засах</b> хэсэг рүү орно.<br>
-<b>3.</b> Batch List үүссэний дараа <b>SEND ALL TO LXP</b> дарна.<br>
-<b>4.</b> LXP tab дээр extension icon → <b>AUTO FILL LXP</b> дарна.
+    st.markdown('<div class="section-title">Ашиглах хамгийн энгийн дараалал</div>', unsafe_allow_html=True)
+
+    step_col, info_col = st.columns([1.35, 1])
+
+    with step_col:
+        st.markdown("""
+<div class="step-box">
+    <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text">
+            <b>Excel дүн бэлэн бол</b> “Бэлэн Excel дүн → Batch” хэсэгт орж файл upload хийнэ.
+            Хэрвээ answer sheet зураг засах бол “Хариултын хуудас засах” хэсгийг сонгоно.
+        </div>
+    </div>
+    <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text">
+            Сурагчийн код, нэр, онооны баганыг сонгоод <b>Batch List</b> үүсгэнэ.
+            Систем буруу, хоосон, хязгаараас хэтэрсэн оноог шалгана.
+        </div>
+    </div>
+    <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text">
+            <b>SEND ALL TO LXP</b> дарж Batch мэдээллийг extension-д бэлдэнэ.
+        </div>
+    </div>
+    <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-text">
+            LXP дүн оруулах хуудсан дээр extension icon → <b>AUTO FILL LXP</b> дарна.
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+    with info_col:
+        st.markdown("""
+<div class="info-panel">
+    <h4>✅ Систем юуг хөнгөвчлөх вэ?</h4>
+    <p>
+        • Excel-ээс LXP рүү гараар шивэх хугацааг багасгана.<br>
+        • OMR шалгалтын preliminary grading хийнэ.<br>
+        • Bloom түвшний гүйцэтгэлийг харуулна.<br>
+        • Багш эцсийн засвар хийсний дараа тайлан, batch үүсгэнэ.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div class="info-panel" style="margin-top:14px;">
+    <h4>⚠️ Анхаарах</h4>
+    <p>
+        AI засалт нь туслах шинжтэй. Эцсийн дүнг багш review хийж баталгаажуулна.
+        LXP рүү оруулахын өмнө Batch List-ээ заавал шалгаарай.
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
