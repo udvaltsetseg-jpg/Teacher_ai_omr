@@ -302,6 +302,252 @@ div[data-testid="stMetric"] {
 </style>
 """, unsafe_allow_html=True)
 
+
+st.markdown(dedent("""
+<style>
+/* ================= DASHBOARD STYLE OVERRIDE ================= */
+
+.stApp{
+    background:#FFFFFF;
+}
+
+[data-testid="stSidebar"]{
+    background:linear-gradient(180deg,#EEF5FF 0%,#F8FBFF 100%) !important;
+    border-right:1px solid #E5E7EB;
+}
+
+[data-testid="stSidebar"] .stButton > button{
+    background:#FFFFFF !important;
+    color:#0F172A !important;
+    border:1px solid #DDE5F3 !important;
+    border-radius:14px !important;
+    min-height:52px !important;
+    font-weight:750 !important;
+    box-shadow:0 8px 20px rgba(15,23,42,0.035);
+    transition:all .18s ease;
+}
+
+[data-testid="stSidebar"] .stButton > button:hover{
+    border-color:#FF4B4B !important;
+    color:#FF4B4B !important;
+    transform:translateY(-1px);
+}
+
+.sidebar-brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:8px 0 18px 0;
+}
+
+.sidebar-logo{
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#3B82F6,#2563EB);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:30px;
+    box-shadow:0 12px 26px rgba(37,99,235,.20);
+}
+
+.sidebar-title{
+    font-size:20px;
+    font-weight:900;
+    color:#0F172A;
+    line-height:1.2;
+}
+
+.sidebar-subtitle{
+    font-size:13px;
+    color:#64748B;
+    margin-top:4px;
+}
+
+.sidebar-help{
+    margin-top:26px;
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 10px 26px rgba(15,23,42,0.045);
+    color:#334155;
+    font-size:14px;
+    line-height:1.65;
+}
+
+.dashboard-hero{
+    position:relative;
+    min-height:285px;
+    border-radius:22px;
+    overflow:hidden;
+    margin:8px 0 32px 0;
+    border:1px solid #E5E7EB;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    background:
+        linear-gradient(90deg, rgba(255,245,235,.96) 0%, rgba(240,247,255,.92) 44%, rgba(219,234,254,.30) 100%),
+        url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1800&auto=format&fit=crop");
+    background-size:cover;
+    background-position:center right;
+}
+
+.dashboard-hero::after{
+    content:"";
+    position:absolute;
+    right:35px;
+    top:32px;
+    width:360px;
+    height:205px;
+    border-radius:24px;
+    background:
+        radial-gradient(circle at 30% 30%, rgba(59,130,246,.14), transparent 35%),
+        linear-gradient(135deg,rgba(255,255,255,.66),rgba(219,234,254,.35));
+    backdrop-filter:blur(2px);
+    border:1px solid rgba(255,255,255,.55);
+}
+
+.dashboard-hero-content{
+    position:relative;
+    z-index:2;
+    padding:48px 42px;
+    max-width:760px;
+}
+
+.dashboard-title{
+    font-size:42px;
+    line-height:1.15;
+    font-weight:950;
+    color:#0B1736;
+    margin-bottom:16px;
+    letter-spacing:-.02em;
+}
+
+.dashboard-subtitle{
+    font-size:18px;
+    color:#13213D;
+    font-weight:650;
+    margin-bottom:22px;
+}
+
+.dashboard-badge{
+    display:inline-block;
+    padding:9px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:900;
+    margin:0 8px 8px 0;
+}
+
+.badge-pink{background:#FFE4EA;color:#E11D48;}
+.badge-blue{background:#DBEAFE;color:#2563EB;}
+.badge-green{background:#DCFCE7;color:#16A34A;}
+.badge-orange{background:#FFEDD5;color:#EA580C;}
+
+.feature-card{
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
+    border-radius:22px;
+    padding:26px 24px 22px 24px;
+    min-height:365px;
+    box-shadow:0 18px 38px rgba(15,23,42,.065);
+    transition:all .18s ease;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+.feature-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 24px 48px rgba(15,23,42,.10);
+}
+
+.feature-icon{
+    width:88px;
+    height:88px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.feature-icon.green{background:#DCFCE7;color:#16A34A;}
+.feature-icon.blue{background:#DBEAFE;color:#2563EB;}
+.feature-icon.yellow{background:#FEF3C7;color:#CA8A04;}
+.feature-icon.purple{background:#F3E8FF;color:#7E22CE;}
+
+.feature-title{
+    font-size:22px;
+    font-weight:950;
+    color:#0F172A;
+    margin-bottom:14px;
+}
+
+.feature-text{
+    color:#475569;
+    font-size:15px;
+    line-height:1.8;
+    min-height:120px;
+}
+
+.dashboard-guide{
+    margin-top:28px;
+    background:#FFFFFF;
+    border:1px solid #E5E7EB;
+    border-radius:22px;
+    padding:28px 32px;
+    box-shadow:0 16px 38px rgba(15,23,42,.055);
+}
+
+.guide-heading{
+    font-size:22px;
+    font-weight:950;
+    color:#0F172A;
+    margin-bottom:16px;
+}
+
+.guide-item{
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    padding:10px 0;
+}
+
+.guide-num{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    background:#FF4B4B;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    flex:0 0 30px;
+}
+
+.guide-text{
+    color:#334155;
+    font-size:15px;
+    line-height:1.65;
+}
+
+.main .stButton > button, div[data-testid="stButton"] > button{
+    border-radius:12px !important;
+    min-height:48px !important;
+    font-weight:850 !important;
+}
+
+@media(max-width:1200px){
+    .dashboard-hero::after{display:none;}
+    .dashboard-title{font-size:34px;}
+}
+</style>
+"""), unsafe_allow_html=True)
+
 if "batch_results" not in st.session_state:
     st.session_state.batch_results = []
 if "final_ai_recommendation" not in st.session_state:
@@ -1059,6 +1305,16 @@ def go_page(page_name):
 
 
 with st.sidebar:
+    st.markdown(dedent("""
+    <div class="sidebar-brand">
+        <div class="sidebar-logo">🎓</div>
+        <div>
+            <div class="sidebar-title">Teacher AI OMR</div>
+            <div class="sidebar-subtitle">Багшийн Туслах Систем</div>
+        </div>
+    </div>
+    """), unsafe_allow_html=True)
+
     st.divider()
     st.subheader("Үндсэн цэс")
 
@@ -1077,177 +1333,27 @@ with st.sidebar:
     if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
         go_page("extension")
 
+    st.markdown(dedent("""
+    <div class="sidebar-help">
+        <b>💡 Тусламж</b><br>
+        Асуулт байвал support@example.com хаягаар холбогдоно уу.
+    </div>
+    """), unsafe_allow_html=True)
 
 if st.session_state.current_page == "home":
 
     st.markdown(dedent("""
-    <style>
-    .app-hero{
-        position:relative;
-        min-height:310px;
-        border-radius:28px;
-        overflow:hidden;
-        margin:18px 0 34px 0;
-        background:
-            linear-gradient(90deg, rgba(255,247,237,0.92) 0%, rgba(238,243,255,0.78) 48%, rgba(219,234,254,0.40) 100%),
-            url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1800&auto=format&fit=crop");
-        background-size:cover;
-        background-position:center;
-        border:1px solid #E5E7EB;
-        box-shadow:0 18px 48px rgba(15,23,42,0.08);
-    }
-
-    .app-hero-inner{
-        padding:54px 44px;
-        max-width:820px;
-    }
-
-    .app-hero-title{
-        font-size:46px;
-        line-height:1.12;
-        font-weight:900;
-        color:#0F172A;
-        margin-bottom:14px;
-    }
-
-    .app-hero-subtitle{
-        color:#1E293B;
-        font-size:18px;
-        line-height:1.7;
-        margin-bottom:20px;
-        font-weight:600;
-    }
-
-    .app-badge{
-        display:inline-block;
-        padding:9px 14px;
-        border-radius:999px;
-        font-size:13px;
-        font-weight:800;
-        margin-right:8px;
-        margin-bottom:8px;
-    }
-
-    .badge-red{background:#FFE4E6;color:#E11D48;}
-    .badge-blue{background:#DBEAFE;color:#2563EB;}
-    .badge-green{background:#DCFCE7;color:#16A34A;}
-    .badge-orange{background:#FFEDD5;color:#EA580C;}
-
-    .home-card{
-        background:white;
-        border-radius:24px;
-        padding:26px 24px 22px 24px;
-        border:1px solid #E5E7EB;
-        box-shadow:0 14px 34px rgba(15,23,42,0.06);
-        min-height:330px;
-        transition:0.2s ease;
-        margin-bottom:10px;
-    }
-
-    .home-card:hover{
-        transform:translateY(-4px);
-        box-shadow:0 20px 46px rgba(15,23,42,0.10);
-    }
-
-    .home-icon{
-        width:82px;
-        height:82px;
-        border-radius:18px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:40px;
-        margin-bottom:18px;
-    }
-
-    .home-icon-green{background:#DCFCE7;}
-    .home-icon-blue{background:#DBEAFE;}
-    .home-icon-yellow{background:#FEF3C7;}
-    .home-icon-purple{background:#F3E8FF;}
-
-    .home-card-title{
-        font-size:22px;
-        font-weight:900;
-        color:#0F172A;
-        margin-bottom:12px;
-    }
-
-    .home-card-text{
-        color:#475569;
-        font-size:15px;
-        line-height:1.75;
-        min-height:95px;
-    }
-
-    .home-section-title{
-        font-size:24px;
-        font-weight:900;
-        color:#0F172A;
-        margin:30px 0 16px 0;
-    }
-
-    .guide-panel{
-        background:#FFFFFF;
-        border:1px solid #E5E7EB;
-        border-radius:24px;
-        padding:26px 28px;
-        box-shadow:0 12px 32px rgba(15,23,42,0.05);
-        margin-top:26px;
-    }
-
-    .guide-title{
-        font-size:22px;
-        font-weight:900;
-        color:#0F172A;
-        margin-bottom:18px;
-    }
-
-    .guide-row{
-        display:flex;
-        gap:16px;
-        align-items:flex-start;
-        padding:10px 0;
-    }
-
-    .guide-num{
-        width:30px;
-        height:30px;
-        border-radius:9px;
-        background:#FF4B4B;
-        color:white;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:900;
-        flex:0 0 30px;
-    }
-
-    .guide-text{
-        color:#334155;
-        font-size:15px;
-        line-height:1.65;
-    }
-
-    div[data-testid="stButton"] > button{
-        border-radius:12px !important;
-        min-height:48px;
-        font-weight:800 !important;
-    }
-    </style>
-    """), unsafe_allow_html=True)
-
-    st.markdown(dedent("""
-    <div class="app-hero">
-        <div class="app-hero-inner">
-            <div class="app-hero-title">Багшийн Туслах Систем</div>
-            <div class="app-hero-subtitle">
+    <div class="dashboard-hero">
+        <div class="dashboard-hero-content">
+            <div class="dashboard-title">Багшийн Туслах Систем</div>
+            <div class="dashboard-subtitle">
                 Teacher AI OMR • LXP AutoFill • Bloom Analytics • AI Reports
             </div>
             <div>
-                <span class="app-badge badge-red">AI OMR</span>
-                <span class="app-badge badge-blue">Bloom Analytics</span>
-                <span class="app-badge badge-green">PDF Report</span>
-                <span class="app-badge badge-orange">LXP Autofill</span>
+                <span class="dashboard-badge badge-pink">AI OMR</span>
+                <span class="dashboard-badge badge-blue">Bloom Analytics</span>
+                <span class="dashboard-badge badge-green">PDF Report</span>
+                <span class="dashboard-badge badge-orange">LXP Autofill</span>
             </div>
         </div>
     </div>
@@ -1257,10 +1363,10 @@ if st.session_state.current_page == "home":
 
     with c1:
         st.markdown(dedent("""
-        <div class="home-card">
-            <div class="home-icon home-icon-green">📊</div>
-            <div class="home-card-title">Даалгаврын анализ</div>
-            <div class="home-card-text">
+        <div class="feature-card">
+            <div class="feature-icon green">📊</div>
+            <div class="feature-title">Даалгаврын анализ</div>
+            <div class="feature-text">
                 Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
             </div>
         </div>
@@ -1273,10 +1379,10 @@ if st.session_state.current_page == "home":
 
     with c2:
         st.markdown(dedent("""
-        <div class="home-card">
-            <div class="home-icon home-icon-blue">📝</div>
-            <div class="home-card-title">Тест засах</div>
-            <div class="home-card-text">
+        <div class="feature-card">
+            <div class="feature-icon blue">📝</div>
+            <div class="feature-title">Тест засах</div>
+            <div class="feature-text">
                 OMR хариултын хуудас зураг upload хийж AI ашиглан шалгалт засах хэсэг.
             </div>
         </div>
@@ -1289,10 +1395,10 @@ if st.session_state.current_page == "home":
 
     with c3:
         st.markdown(dedent("""
-        <div class="home-card">
-            <div class="home-icon home-icon-yellow">📚</div>
-            <div class="home-card-title">Хичээлийн төлөвлөгөө</div>
-            <div class="home-card-text">
+        <div class="feature-card">
+            <div class="feature-icon yellow">📚</div>
+            <div class="feature-title">Хичээлийн төлөвлөгөө</div>
+            <div class="feature-text">
                 Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл боловсруулах хэсэг.
             </div>
         </div>
@@ -1305,10 +1411,10 @@ if st.session_state.current_page == "home":
 
     with c4:
         st.markdown(dedent("""
-        <div class="home-card">
-            <div class="home-icon home-icon-purple">🤖</div>
-            <div class="home-card-title">Teacher AI OMR</div>
-            <div class="home-card-text">
+        <div class="feature-card">
+            <div class="feature-icon purple">🤖</div>
+            <div class="feature-title">Teacher AI OMR</div>
+            <div class="feature-text">
                 Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP AutoFill workflow.
             </div>
         </div>
@@ -1320,21 +1426,25 @@ if st.session_state.current_page == "home":
             """), unsafe_allow_html=True)
 
     st.markdown(dedent("""
-    <div class="guide-panel">
-        <div class="guide-title">🚀 Ашиглах хамгийн энгийн дараалал</div>
-        <div class="guide-row">
+    <div class="dashboard-guide">
+        <div class="guide-heading">🚀 Ашиглах хамгийн энгийн дараалал</div>
+
+        <div class="guide-item">
             <div class="guide-num">1</div>
             <div class="guide-text">Даалгаврын анализ хэсэгт Excel upload хийж анализ харна.</div>
         </div>
-        <div class="guide-row">
+
+        <div class="guide-item">
             <div class="guide-num">2</div>
             <div class="guide-text">Тест засах хэсэгт OMR зураг upload хийж AI grading хийнэ.</div>
         </div>
-        <div class="guide-row">
+
+        <div class="guide-item">
             <div class="guide-num">3</div>
             <div class="guide-text">Teacher AI OMR хэсэгт Дүнгийн багц үүсгэнэ.</div>
         </div>
-        <div class="guide-row">
+
+        <div class="guide-item">
             <div class="guide-num">4</div>
             <div class="guide-text">SEND ALL TO LXP дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.</div>
         </div>
