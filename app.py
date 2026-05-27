@@ -1421,109 +1421,211 @@ if st.session_state.current_page == "home":
     st.markdown(dedent("""
     <div class="dashboard-hero">
         <div class="dashboard-hero-content">
-            <div class="dashboard-title">Багшийн Туслах Систем</div>
+
+            <div class="dashboard-title">
+                Багшийн Туслах Систем
+            </div>
+
             <div class="dashboard-subtitle">
                 Багшийн AI OMR • LXP автоматаар бөглөх • Bloom шинжилгээ • AI тайлан
             </div>
+
             <div>
                 <span class="dashboard-badge badge-pink">AI OMR</span>
                 <span class="dashboard-badge badge-blue">Bloom шинжилгээ</span>
                 <span class="dashboard-badge badge-green">PDF тайлан</span>
-                <span class="dashboard-badge badge-orange">LXP Autofill</span>
+                <span class="dashboard-badge badge-orange">LXP автоматаар бөглөх</span>
             </div>
+
         </div>
     </div>
     """), unsafe_allow_html=True)
 
     c1, c2, c3, c4 = st.columns(4)
 
+    # =========================================
+    # CARD 1
+    # =========================================
     with c1:
+
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon green">📊</div>
-            <div class="feature-title">Даалгаврын анализ</div>
-            <div class="feature-text">
-                Шалгалтын дүн, сурагчийн ахиц, ангийн гүйцэтгэл болон анализ харах хэсэг.
+
+            <div class="feature-icon green">
+                📊
             </div>
+
+            <div class="feature-title">
+                Даалгаврын анализ
+            </div>
+
+            <div class="feature-text">
+                Шалгалтын дүн, сурагчийн ахиц,
+                ангийн гүйцэтгэл болон
+                даалгаврын анализ харах хэсэг.
+            </div>
+
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button("📊 Даалгаврын анализ нээх", use_container_width=True, key="home_assignment_analysis_open"):
+        if st.button(
+            "📊 Даалгаврын анализ нээх",
+            use_container_width=True,
+            key="home_assignment_analysis_open"
+        ):
             go_page("assignment_analysis")
 
+    # =========================================
+    # CARD 2
+    # =========================================
     with c2:
+
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon blue">📝</div>
-            <div class="feature-title">Тест засах</div>
-            <div class="feature-text">
-                OMR хариултын хуудас зураг байршуулах хийж AI ашиглан шалгалт засах хэсэг.
+
+            <div class="feature-icon blue">
+                📝
             </div>
+
+            <div class="feature-title">
+                Тест засах
+            </div>
+
+            <div class="feature-text">
+                OMR хариултын хуудасны зураг
+                upload хийж AI ашиглан
+                шалгалт засах хэсэг.
+            </div>
+
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button("📝 Тест засах хэсэг", use_container_width=True, key="home_test_checker_open"):
+        if st.button(
+            "📝 Тест засах хэсэг",
+            use_container_width=True,
+            key="home_test_checker_open"
+        ):
             go_page("test_checker")
 
+    # =========================================
+    # CARD 3
+    # =========================================
     with c3:
+
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon yellow">📚</div>
-            <div class="feature-title">Хичээлийн төлөвлөгөө</div>
-            <div class="feature-text">
-                Жилийн төлөвлөгөө, нэгж хичээл, өдөр тутмын бэлтгэл боловсруулах хэсэг.
+
+            <div class="feature-icon yellow">
+                📚
             </div>
+
+            <div class="feature-title">
+                Хичээлийн төлөвлөгөө
+            </div>
+
+            <div class="feature-text">
+                Жилийн төлөвлөгөө,
+                нэгж хичээл болон өдөр тутмын
+                бэлтгэл боловсруулах хэсэг.
+            </div>
+
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button("📚 Хичээлийн төлөвлөгөө", use_container_width=True, key="home_lesson_plan_open"):
-            st.markdown(dedent("""
-            <meta http-equiv="refresh" content="0; url=https://example.com/lesson-plan">
-            """), unsafe_allow_html=True)
+        if st.button(
+            "📚 Хичээлийн төлөвлөгөө",
+            use_container_width=True,
+            key="home_lesson_plan_open"
+        ):
+            st.markdown("""
+            <meta http-equiv="refresh"
+            content="0; url=https://example.com/lesson-plan">
+            """, unsafe_allow_html=True)
 
+    # =========================================
+    # CARD 4
+    # =========================================
     with c4:
+
         st.markdown(dedent("""
         <div class="feature-card">
-            <div class="feature-icon purple">🤖</div>
-            <div class="feature-title">Teacher AI OMR</div>
-            <div class="feature-text">
-                Утасны камераар зураг авах → AI шалгалт засах → Bloom шинжилгээ → Эцэг эхийн тайлан → LXP автоматаар бөглөх.
+
+            <div class="feature-icon purple">
+                🤖
             </div>
+
+            <div class="feature-title">
+                Teacher AI OMR
+            </div>
+
+            <div class="feature-text">
+                Утасны камераар зураг авах →
+                AI шалгалт засах →
+                Bloom шинжилгээ →
+                Эцэг эхийн тайлан →
+                LXP автоматаар бөглөх workflow.
+            </div>
+
         </div>
         """), unsafe_allow_html=True)
 
-        if st.button("🤖 Teacher AI OMR нээх", use_container_width=True, key="home_teacher_ai_omr_open"):
+        if st.button(
+            "🤖 Teacher AI OMR нээх",
+            use_container_width=True,
+            key="home_teacher_ai_omr_open"
+        ):
             st.session_state.teacher_ai_mode = True
             go_page("teacher_ai_home")
 
+    # =========================================
+    # GUIDE SECTION
+    # =========================================
+
     st.markdown(dedent("""
     <div class="dashboard-guide">
-        <div class="guide-heading">🚀 Ашиглах хамгийн энгийн дараалал</div>
+
+        <div class="guide-heading">
+            🚀 Ашиглах хамгийн энгийн дараалал
+        </div>
 
         <div class="guide-item">
             <div class="guide-num">1</div>
-            <div class="guide-text">Даалгаврын анализ хэсэгт Excel байршуулах хийж анализ харна.</div>
+            <div class="guide-text">
+                Даалгаврын анализ хэсэгт
+                Excel файл upload хийж
+                анализ харна.
+            </div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">2</div>
-            <div class="guide-text">Тест засах хэсэгт OMR зураг байршуулах хийж AI grading хийнэ.</div>
+            <div class="guide-text">
+                Тест засах хэсэгт OMR зураг
+                upload хийж AI grading хийнэ.
+            </div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">3</div>
-            <div class="guide-text">Teacher AI OMR хэсэгт Дүнгийн багц үүсгэнэ.</div>
+            <div class="guide-text">
+                Teacher AI OMR хэсэгт
+                Дүнгийн багц үүсгэнэ.
+            </div>
         </div>
 
         <div class="guide-item">
             <div class="guide-num">4</div>
-            <div class="guide-text">Бүх дүнг LXP рүү илгээх дарж Chrome extension ашиглан LXP рүү автоматаар бөглөнө.</div>
+            <div class="guide-text">
+                SEND ALL TO LXP дарж
+                Chrome extension ашиглан
+                LXP рүү автоматаар бөглөнө.
+            </div>
         </div>
+
     </div>
     """), unsafe_allow_html=True)
 
     st.stop()
-
 
 
 
