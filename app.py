@@ -110,6 +110,38 @@ div[data-testid="stMetric"] {
     box-shadow:0 8px 24px rgba(0,0,0,0.04);
     margin-bottom:24px;
 }
+
+.nav-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 22px;
+    padding: 24px;
+    min-height: 190px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+}
+.nav-card h3 {
+    margin: 0 0 8px 0;
+    color: #111827;
+    font-size: 23px;
+    font-weight: 850;
+}
+.nav-card p {
+    color: #6B7280;
+    font-size: 14px;
+    line-height: 1.65;
+}
+.quick-guide {
+    background:#F8FAFC;
+    padding:18px;
+    border-radius:18px;
+    border:1px solid #E5E7EB;
+    line-height:1.8;
+}
+.small-note {
+    color:#6B7280;
+    font-size:13px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -134,6 +166,8 @@ if "debug_image" not in st.session_state:
     st.session_state.debug_image = None
 if "rotation_angle" not in st.session_state:
     st.session_state.rotation_angle = 0
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "home"
 
 
 def generate_answer_sheet_pdf(question_count):
@@ -591,7 +625,7 @@ window.addEventListener("message", (event) => {
 
   const validSource =
     event.data.source === "TEACHER_AI" ||
-    event.data.source === "TEACHER_AI";
+    event.data.source === "NEST_TEACHER_AI";
 
   if (!validSource) return;
 
@@ -910,24 +944,185 @@ with st.sidebar:
 
 
 # ============================================
-# APP MODE
+# HOME + SIMPLE NAVIGATION
 # ============================================
 
-app_mode = st.radio(
-    "Ажиллах горим",
-    [
-        "📁 Бэлэн Excel → LXP",
-        "📷 OMR шалгалт засах → LXP",
-    ],
-    horizontal=True,
-)
+def go_page(page_name):
+    st.session_state.current_page = page_name
+    st.rerun()
+
+
+with st.sidebar:
+    st.divider()
+    st.subheader("Үндсэн цэс")
+
+    if st.button("🏠 Нүүр хуудас", use_container_width=True):
+        go_page("home")
+
+    if st.button("📁 Бэлэн Excel → Batch", use_container_width=True):
+        go_page("excel")
+
+    if st.button("📷 Хариултын хуудас засах", use_container_width=True):
+        go_page("omr")
+
+    if st.button("📝 Хариултын хуудас татах", use_container_width=True):
+        go_page("answer_sheet")
+
+    if st.button("🧩 Extension татах", use_container_width=True):
+        go_page("extension")
+
+
+if st.session_state.current_page == "home":
+    st.markdown("## Нүүр хуудас")
+    st.caption("Доорх хэсгээс хийх ажлаа сонгоно уу.")
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        st.markdown("""
+<div class="nav-card">
+<h3>📁 Бэлэн Excel дүн → Batch үүсгэх</h3>
+<p>
+Бэлэн Excel файл upload хийж, сурагчийн код / нэр / онооны баганыг сонгоод
+LXP-д оруулах Batch List үүсгэнэ.
+</p>
+</div>
+""", unsafe_allow_html=True)
+        if st.button("📁 Excel хэсэг рүү орох", use_container_width=True, type="primary"):
+            go_page("excel")
+
+    with c2:
+        st.markdown("""
+<div class="nav-card">
+<h3>📷 Хариултын хуудас засах</h3>
+<p>
+Зөв хариултын Excel болон сурагчийн answer sheet зураг upload хийж,
+AI OMR шалгалт засна. Багш final review хийж болно.
+</p>
+</div>
+""", unsafe_allow_html=True)
+        if st.button("📷 OMR хэсэг рүү орох", use_container_width=True, type="primary"):
+            go_page("omr")
+
+    c3, c4 = st.columns(2)
+
+    with c3:
+        st.markdown("""
+<div class="nav-card">
+<h3>📝 Хариултын хуудас татах</h3>
+<p>
+Асуултын тоогоо оруулаад A/B/C/D bubble бүхий OMR answer sheet PDF татна.
+</p>
+</div>
+""", unsafe_allow_html=True)
+        if st.button("📝 PDF татах хэсэг", use_container_width=True):
+            go_page("answer_sheet")
+
+    with c4:
+        st.markdown("""
+<div class="nav-card">
+<h3>🧩 LXP Extension татах</h3>
+<p>
+Chrome extension татаж суулгаад, Batch List-ийн дүнг LXP рүү автоматаар бөглөнө.
+</p>
+</div>
+""", unsafe_allow_html=True)
+        if st.button("🧩 Extension хэсэг", use_container_width=True):
+            go_page("extension")
+
+    st.markdown("### Ашиглах хамгийн энгийн дараалал")
+    st.markdown("""
+<div class="quick-guide">
+<b>1.</b> Хэрвээ дүн Excel дээр бэлэн бол <b>Бэлэн Excel → Batch</b> хэсэг рүү орно.<br>
+<b>2.</b> Хэрвээ зурагтай answer sheet засах бол <b>Хариултын хуудас засах</b> хэсэг рүү орно.<br>
+<b>3.</b> Batch List үүссэний дараа <b>SEND ALL TO LXP</b> дарна.<br>
+<b>4.</b> LXP tab дээр extension icon → <b>AUTO FILL LXP</b> дарна.
+</div>
+""", unsafe_allow_html=True)
+
+    st.stop()
+
+
+if st.session_state.current_page == "answer_sheet":
+    st.markdown("## 📝 Хариултын хуудас татах")
+    st.caption("Асуултын тоогоо сонгоод OMR answer sheet PDF татна.")
+
+    with st.container(border=True):
+        page_q_count = st.number_input(
+            "Асуултын тоо",
+            min_value=1,
+            max_value=200,
+            value=int(q_count),
+            step=1,
+            key="answer_sheet_page_q_count",
+        )
+
+        page_pdf = generate_answer_sheet_pdf(page_q_count)
+
+        st.download_button(
+            label="📥 OMR Answer Sheet PDF татах",
+            data=page_pdf,
+            file_name=f"OMR_{page_q_count}Q.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+
+        st.info("PDF-ийг хэвлээд сурагчдаар A/B/C/D bubble бөглүүлнэ.")
+
+    if st.button("⬅️ Нүүр хуудас руу буцах"):
+        go_page("home")
+
+    st.stop()
+
+
+if st.session_state.current_page == "extension":
+    st.markdown("## 🧩 LXP Connector Extension татах")
+    st.caption("Extension татаж суулгаснаар Batch List-ийн дүнг LXP рүү автоматаар бөглөх боломжтой.")
+
+    with st.container(border=True):
+        ext_zip = create_lxp_extension_zip()
+
+        st.download_button(
+            label="⬇️ LXP Connector татах",
+            data=ext_zip.getvalue(),
+            file_name="lxp_clipboard_connector.zip",
+            mime="application/zip",
+            use_container_width=True,
+        )
+
+        st.markdown("""
+### Суулгах заавар
+1. ZIP файлыг татаж аваад задлана.  
+2. Chrome дээр `chrome://extensions` нээнэ.  
+3. `Developer mode` асаана.  
+4. `Load unpacked` дарна.  
+5. Задалсан `lxp_clipboard_connector` folder-ийг сонгоно.  
+6. Streamlit дээр `SEND ALL TO LXP` дарна.  
+7. LXP дээр extension icon → `AUTO FILL LXP` дарна.  
+""")
+
+    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_from_extension"):
+        go_page("home")
+
+    st.stop()
+
 
 answer_excel = None
 answer_img = None
 student_code = ""
 student_name = ""
 
+if st.session_state.current_page == "excel":
+    app_mode = "📁 Бэлэн Excel → LXP"
+elif st.session_state.current_page == "omr":
+    app_mode = "📷 OMR шалгалт засах → LXP"
+else:
+    app_mode = "📁 Бэлэн Excel → LXP"
+
+
 if app_mode == "📷 OMR шалгалт засах → LXP":
+    st.markdown("## 📷 Хариултын хуудас засах → LXP")
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -939,13 +1134,17 @@ if app_mode == "📷 OMR шалгалт засах → LXP":
     student_code = st.text_input("Сурагчийн код", value="NEST25080001")
     student_name = st.text_input("Сурагчийн нэр", value="Сурагч")
 
+
 # ============================================
 # DIRECT EXCEL → LXP MODE
 # ============================================
 
 if app_mode == "📁 Бэлэн Excel → LXP":
 
-    st.subheader("📁 Бэлэн Excel → LXP")
+    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_excel"):
+        go_page("home")
+
+    st.markdown("## 📁 Бэлэн Excel дүн → Batch үүсгэх")
 
     with st.container(border=True):
         lxp_excel = st.file_uploader(
@@ -1130,6 +1329,10 @@ async function sendAllToLXP(){{
         st.info("Batch list хоосон байна.")
 
 if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and answer_img:
+
+    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_omr_working"):
+        go_page("home")
+
     df_answer = pd.read_excel(answer_excel)
 
     if "Answer" not in df_answer.columns:
@@ -1755,4 +1958,6 @@ async function sendAllToLXP(){{
     else:
         st.info("Batch list хоосон байна.")
 elif app_mode == "📷 OMR шалгалт засах → LXP":
+    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_omr_empty"):
+        go_page("home")
     st.info("Excel болон сурагчийн зураг оруулна уу.")
