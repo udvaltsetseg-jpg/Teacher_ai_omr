@@ -1328,7 +1328,7 @@ if st.session_state.teacher_ai_mode:
         if st.button("📝 Хариултын хуудас татах", use_container_width=True, key="sidebar_answer_sheet_btn"):
             go_page("answer_sheet")
 
-        if st.button("🧩 Өргөтгөл татах", use_container_width=True, key="sidebar_extension_btn"):
+        if st.button("🧩 Extention татах", use_container_width=True, key="sidebar_extension_btn"):
             go_page("extension")
 
 else:
@@ -1534,13 +1534,13 @@ if st.session_state.current_page == "teacher_ai_home":
         <h1 class="hero-title">Багшийн AI OMR үндсэн хэсэг</h1>
         <p class="hero-subtitle">
             Энэ хэсэгт Excel дүнгээ дүнгийн багц болгох, OMR хариултын хуудас засах,
-            хариултын хуудасны PDF татах, LXP холбогч өргөтгөл татах боломжтой.
+            хариултын хуудасны PDF татах, LXP холбогч Extention татах боломжтой.
         </p>
         <div class="hero-badges">
             <span class="hero-badge">📁 Excel → Дүнгийн багц</span>
             <span class="hero-badge">📷 OMR шалгалт засах</span>
             <span class="hero-badge">📝 Хариултын хуудасны PDF</span>
-            <span class="hero-badge">🧩 LXP өргөтгөл</span>
+            <span class="hero-badge">🧩 LXP Extention</span>
         </div>
     </div>
     """), unsafe_allow_html=True)
@@ -1638,8 +1638,8 @@ if st.session_state.current_page == "answer_sheet":
 
 
 if st.session_state.current_page == "extension":
-    st.markdown("## 🧩 LXP Connector Өргөтгөл татах")
-    st.caption("Өргөтгөл татаж суулгаснаар Дүнгийн багцыг LXP рүү автоматаар бөглөх боломжтой.")
+    st.markdown("## 🧩 LXP Connector Extention татах")
+    st.caption("Extention татаж суулгаснаар Дүнгийн багцыг LXP рүү автоматаар бөглөх боломжтой.")
 
     with st.container(border=True):
         ext_zip = create_lxp_extension_zip()
