@@ -1083,6 +1083,9 @@ with st.sidebar:
     if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn"):
         go_page("extension")
 
+    if st.button("📊 Grade Viewer", use_container_width=True, key="sidebar_grade_viewer_btn"):
+        go_page("grade_viewer")
+
 
 if st.session_state.current_page == "home":
     st.markdown("""
@@ -1177,6 +1180,86 @@ if st.session_state.current_page == "home":
         if st.button("🧩 Extension татах", use_container_width=True, key="sidebar_extension_btn_2"):
             go_page("extension")
 
+
+    st.markdown('<div class="section-title">🧑‍🏫 Багшийн туслах систем</div>', unsafe_allow_html=True)
+
+    gv1, gv2 = st.columns(2)
+
+    with gv1:
+        st.markdown("""
+<div class="workflow-card">
+    <div class="workflow-icon icon-excel">📊</div>
+    <h3>Даалгаврын анализ</h3>
+    <p>
+        Багш нарт зориулсан ойлгомжтой бүтэцтэй шалгалт, даалгаврын анализыг
+        үр дүнтэй боловсруулах боломжтой хэсэг.
+    </p>
+    <span class="workflow-tag">Analysis</span>
+    <span class="workflow-tag">Assignment</span>
+    <span class="workflow-tag">Statistics</span>
+</div>
+""", unsafe_allow_html=True)
+
+        if st.button("📊 Даалгаврын анализ нээх", use_container_width=True, key="home_assignment_analysis_btn"):
+            go_page("grade_viewer")
+
+    with gv2:
+        st.markdown("""
+<div class="workflow-card">
+    <div class="workflow-icon icon-omr">📝</div>
+    <h3>Тест засах</h3>
+    <p>
+        Цаасан тест болон хариултын хуудсыг засах,
+        AI урьдчилсан үнэлгээ хийх, багш final review хийх хэсэг.
+    </p>
+    <span class="workflow-tag">Test checking</span>
+    <span class="workflow-tag">AI grading</span>
+    <span class="workflow-tag">Review</span>
+</div>
+""", unsafe_allow_html=True)
+
+        if st.button("📝 Тест засах хэсэг", use_container_width=True, key="home_test_check_btn"):
+            go_page("grade_viewer")
+
+    gv3, gv4 = st.columns(2)
+
+    with gv3:
+        st.markdown("""
+<div class="workflow-card">
+    <div class="workflow-icon icon-sheet">📚</div>
+    <h3>Хичээлийн төлөвлөгөө</h3>
+    <p>
+        Жил, улирал, өдөр тутмын хичээлийн төлөвлөгөө,
+        бэлтгэл болон сургалтын үйл ажиллагааг төлөвлөх хэсэг.
+    </p>
+    <span class="workflow-tag">Lesson plan</span>
+    <span class="workflow-tag">Planning</span>
+    <span class="workflow-tag">Teacher tool</span>
+</div>
+""", unsafe_allow_html=True)
+
+        if st.button("📚 Хичээлийн төлөвлөгөө нээх", use_container_width=True, key="home_lesson_plan_btn"):
+            go_page("grade_viewer")
+
+    with gv4:
+        st.markdown("""
+<div class="workflow-card">
+    <div class="workflow-icon icon-ext">🤖</div>
+    <h3>Teacher AI OMR</h3>
+    <p>
+        Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP
+        workflow-оор шалгалтын хуудсыг засаж, дүнгийн багц үүсгэнэ.
+    </p>
+    <span class="workflow-tag">AI OMR</span>
+    <span class="workflow-tag">Bloom</span>
+    <span class="workflow-tag">LXP</span>
+</div>
+""", unsafe_allow_html=True)
+
+        if st.button("🤖 Teacher AI OMR нээх", use_container_width=True, key="home_teacher_ai_omr_btn"):
+            go_page("omr")
+
+
     st.markdown('<div class="section-title">Ашиглах дараалал</div>', unsafe_allow_html=True)
 
     step_col, info_col = st.columns([1.35, 1])
@@ -1235,6 +1318,39 @@ if st.session_state.current_page == "home":
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+    st.stop()
+
+
+
+# ============================================
+# GRADE VIEWER PAGE
+# ============================================
+
+if st.session_state.current_page == "grade_viewer":
+    st.markdown("## 📊 Grade Viewer систем")
+    st.caption("Дүнгийн анализ, тестийн статистик, сурагчдын гүйцэтгэлийн харагдац.")
+
+    with st.container(border=True):
+        st.markdown("""
+### 🧑‍🏫 Багшийн нэмэлт туслах хэрэгсэл
+
+Энэ хэсэгт:
+- Даалгаврын анализ,
+- Тест засах,
+- Хичээлийн төлөвлөгөө
+
+гэсэн Grade Viewer системийн хэрэгслүүдийг ашиглана.
+""")
+
+        components.iframe(
+            "https://kholboo.github.io/Grade-Viewer/",
+            height=900,
+            scrolling=True,
+        )
+
+    if st.button("⬅️ Нүүр хуудас руу буцах", key="back_from_grade_viewer"):
+        go_page("home")
 
     st.stop()
 
