@@ -895,8 +895,9 @@ Paste хийх шаардлагагүй.
     buffer.seek(0)
     return buffer
 
+
 with st.sidebar:
-    st.divider()
+
     st.subheader("Үндсэн цэс")
 
     if st.button("🏠 Нүүр хуудас", use_container_width=True):
@@ -914,7 +915,8 @@ with st.sidebar:
     if st.button("🧩 Extension татах", use_container_width=True):
         go_page("extension")
 
-with st.sidebar:
+    st.divider()
+
     st.header("Answer Sheet")
     q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
     pdf_buffer = generate_answer_sheet_pdf(q_count)
@@ -960,6 +962,7 @@ with st.sidebar:
 6. Үндсэн програм дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
 """)
 
+
 # ============================================
 # HOME + SIMPLE NAVIGATION
 # ============================================
@@ -967,6 +970,8 @@ with st.sidebar:
 def go_page(page_name):
     st.session_state.current_page = page_name
     st.rerun()
+
+
 
 if st.session_state.current_page == "home":
     st.markdown("## Нүүр хуудас")
