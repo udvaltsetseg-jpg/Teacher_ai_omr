@@ -65,7 +65,7 @@ BLOOM_MN = {
 }
 
 st.set_page_config(
-    page_title="Teacher AI OMR",
+    page_title="Excel → LXP Autofill",
     layout="wide",
 )
 
@@ -115,8 +115,8 @@ div[data-testid="stMetric"] {
 
 st.markdown("""
 <div class="hero">
-    <h1>Teacher AI OMR</h1>
-    <p>Phone Camera → AI Grading → Bloom Analytics → Parent Report → LXP</p>
+    <h1>Excel → LXP Autofill</h1>
+    <p>Excel Sheet сонгох → Багана тохируулах → Дүнгийн багц → LXP автоматаар бөглөх</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -518,7 +518,7 @@ def create_lxp_extension_zip():
   <div class="card">
     <h2>NEST LXP Connector</h2>
     <p class="hint">
-      Streamlit дээр <b>SEND ALL TO LXP</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
+      Streamlit дээр <b>БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ</b> дарсан бол энэ товчоор LXP дээр шууд бөглөнө.
     </p>
 
     <button id="fillLatestBtn">AUTO FILL LXP</button>
@@ -562,7 +562,7 @@ fillLatestBtn.addEventListener("click", async () => {
     }
 
     if (!Array.isArray(payload) || payload.length === 0) {
-      showStatus("Batch JSON олдсонгүй. Streamlit дээр SEND ALL TO LXP дарсны дараа дахин AUTO FILL LXP дарна уу.", true);
+      showStatus("Batch JSON олдсонгүй. Streamlit дээр БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дарсны дараа дахин AUTO FILL LXP дарна уу.", true);
       return;
     }
 
@@ -841,7 +841,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 ## Workflow
 1. Streamlit дээр Batch List үүсгэнэ.
-2. SEND ALL TO LXP дарна. Энэ үед JSON clipboard руу copy болно.
+2. БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дарна. Энэ үед JSON clipboard руу copy болно.
 3. LXP tab дээр extension icon → AUTO FILL LXP дарна.
 4. Extension clipboard/storage-оос JSON уншаад LXP дээр бөглөнө.
 
@@ -863,29 +863,15 @@ Paste хийх шаардлагагүй.
 
 
 with st.sidebar:
-    st.header("Answer Sheet")
-    q_count = st.number_input("Асуултын тоо", value=20, min_value=1, max_value=200)
-    pdf_buffer = generate_answer_sheet_pdf(q_count)
-    st.download_button(
-        label="PDF татах",
-        data=pdf_buffer,
-        file_name=f"OMR_{q_count}Q.pdf",
-        mime="application/pdf",
-    )
-
-    preview_width = st.slider(
-        "Preview зурагны өргөн",
-        min_value=500,
-        max_value=1400,
-        value=1050,
-        step=50,
-    )
-
+    st.header("LXP Autofill")
+    st.caption("Excel файлаас sheet сонгож, дүнгийн багц үүсгээд LXP рүү автоматаар бөглөнө.")
     st.divider()
+    q_count = 20
+    preview_width = 1050
     st.subheader("LXP Connector Extension")
 
     st.caption(
-        "LXP Connector extension татаж суулгаснаар SEND ALL TO LXP товчоор дүнг LXP рүү шууд автоматаар бөглөнө."
+        "LXP Connector extension татаж суулгаснаар БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ товчоор дүнг LXP рүү шууд автоматаар бөглөнө."
     )
 
     lxp_extension_zip = create_lxp_extension_zip()
@@ -905,7 +891,7 @@ with st.sidebar:
 3. `Developer mode` асаана.  
 4. `Load unpacked` дарна.  
 5. Задалсан `nest_lxp_clipboard_connector` folder-ийг сонгоно.  
-6. Streamlit дээр SEND ALL TO LXP дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
+6. Streamlit дээр БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ дараад, LXP дээр extension icon → AUTO FILL LXP дарна.  
 """)
 
 
@@ -913,39 +899,21 @@ with st.sidebar:
 # APP MODE
 # ============================================
 
-app_mode = st.radio(
-    "Ажиллах горим",
-    [
-        "📁 Бэлэн Excel → LXP",
-        "📷 OMR шалгалт засах → LXP",
-    ],
-    horizontal=True,
-)
+app_mode = "📁 Excel → LXP Autofill"
+st.info("📁 Excel файл оруулаад sheet сонгон, сурагчийн код / нэр / онооны баганыг тохируулж LXP рүү автоматаар бөглөнө.")
 
 answer_excel = None
 answer_img = None
 student_code = ""
 student_name = ""
 
-if app_mode == "📷 OMR шалгалт засах → LXP":
-    col1, col2 = st.columns(2)
-
-    with col1:
-        answer_excel = st.file_uploader("Зөв хариултын Excel", type=["xlsx"])
-
-    with col2:
-        answer_img = st.file_uploader("Сурагчийн зураг", type=["jpg", "jpeg", "png"])
-
-    student_code = st.text_input("Сурагчийн код", value="NEST25080001")
-    student_name = st.text_input("Сурагчийн нэр", value="Сурагч")
-
 # ============================================
 # DIRECT EXCEL → LXP MODE
 # ============================================
 
-if app_mode == "📁 Бэлэн Excel → LXP":
+if app_mode == "📁 Excel → LXP Autofill":
 
-    st.subheader("📁 Бэлэн Excel → LXP")
+    st.subheader("📁 Excel → LXP Autofill")
 
     with st.container(border=True):
         lxp_excel = st.file_uploader(
@@ -955,9 +923,20 @@ if app_mode == "📁 Бэлэн Excel → LXP":
         )
 
         if lxp_excel is not None:
-            lxp_df_original = pd.read_excel(lxp_excel)
+            excel_file = pd.ExcelFile(lxp_excel)
 
-            st.success("Excel амжилттай уншигдлаа")
+            selected_sheet = st.selectbox(
+                "📑 Sheet сонгох",
+                excel_file.sheet_names,
+                key="direct_lxp_sheet_select",
+            )
+
+            lxp_df_original = pd.read_excel(
+                excel_file,
+                sheet_name=selected_sheet,
+            )
+
+            st.success(f"'{selected_sheet}' sheet амжилттай уншигдлаа")
 
             st.dataframe(
                 lxp_df_original.head(20),
@@ -970,21 +949,21 @@ if app_mode == "📁 Бэлэн Excel → LXP":
 
             with col_map1:
                 code_col = st.selectbox(
-                    "Student code column",
+                    "Сурагчийн кодын багана",
                     cols,
                     key="direct_lxp_code_col",
                 )
 
             with col_map2:
                 name_col = st.selectbox(
-                    "Student name column",
+                    "Сурагчийн нэрийн багана",
                     cols,
                     key="direct_lxp_name_col",
                 )
 
             with col_map3:
                 score_col = st.selectbox(
-                    "Score column",
+                    "Онооны багана",
                     cols,
                     key="direct_lxp_score_col",
                 )
@@ -995,7 +974,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                 "Score": lxp_df_original[score_col],
             })
 
-            st.markdown("### ✅ LXP Ready Preview")
+            st.markdown("### ✅ LXP-д бэлэн урьдчилсан харагдац")
 
             st.dataframe(
                 lxp_ready_df,
@@ -1005,7 +984,7 @@ if app_mode == "📁 Бэлэн Excel → LXP":
             add_col, clear_col = st.columns([1, 1])
 
             with add_col:
-                if st.button("➕ Excel-с Batch List рүү нэмэх", key="direct_add_excel_to_batch"):
+                if st.button("➕ Excel-с Дүнгийн багц руу нэмэх", key="direct_add_excel_to_batch"):
                     added_count = 0
                     skipped_count = 0
 
@@ -1038,13 +1017,13 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                             added_count += 1
 
                     st.success(
-                        f"{added_count} сурагч Batch List-д нэмэгдлээ. "
+                        f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
                         f"{skipped_count} мөр алгасагдлаа."
                     )
                     st.rerun()
 
             with clear_col:
-                if st.button("🧹 Batch List цэвэрлэх", key="direct_clear_batch_top"):
+                if st.button("🧹 Дүнгийн багц цэвэрлэх", key="direct_clear_batch_top"):
                     st.session_state.batch_results = []
                     st.rerun()
 
@@ -1057,16 +1036,16 @@ if app_mode == "📁 Бэлэн Excel → LXP":
                 )
 
             st.download_button(
-                "⬇️ Download LXP Ready Excel",
+                "⬇️ LXP-д бэлэн Excel татах",
                 data=output.getvalue(),
                 file_name="LXP_READY.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
 
         else:
-            st.info("LXP-д оруулах Excel файлаа upload хийнэ үү.")
+            st.info("LXP-д оруулах Excel файлаа байршуулна уу.")
 
-    st.subheader("📋 Batch List / LXP Fill")
+    st.subheader("📋 Дүнгийн багц / LXP автоматаар бөглөх")
 
     if len(st.session_state.batch_results) > 0:
         batch_df = pd.DataFrame(st.session_state.batch_results)
@@ -1107,7 +1086,7 @@ setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
         font-size:16px;
         width:100%;
     ">
-    SEND ALL TO LXP
+    БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ
 </button>
 
 <script>
@@ -1121,20 +1100,20 @@ async function sendAllToLXP(){{
     }}
 
     postToExtension("SEND_TO_LXP");
-    alert("Batch list clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
+    alert("Дүнгийн багц хадгалагдлаа. Одоо LXP tab дээр өргөтгөл → LXP АВТОМАТААР БӨГЛӨХ дарна.");
 }}
 </script>
 """,
             height=80,
         )
 
-        if st.button("CLEAR BATCH", key="direct_clear_batch_bottom"):
+        if st.button("ДҮНГИЙН БАГЦ ЦЭВЭРЛЭХ", key="direct_clear_batch_bottom"):
             st.session_state.batch_results = []
             st.rerun()
     else:
-        st.info("Batch list хоосон байна.")
+        st.info("Дүнгийн багц хоосон байна.")
 
-if app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and answer_img:
+if False and app_mode == "📷 OMR шалгалт засах → LXP" and answer_excel and answer_img:
     df_answer = pd.read_excel(answer_excel)
 
     if "Answer" not in df_answer.columns:
@@ -1608,21 +1587,21 @@ ChatGPT AI зөвлөмж:
 
             with col_map1:
                 code_col = st.selectbox(
-                    "Student code column",
+                    "Сурагчийн кодын багана",
                     cols,
                     key="lxp_code_col"
                 )
 
             with col_map2:
                 name_col = st.selectbox(
-                    "Student name column",
+                    "Сурагчийн нэрийн багана",
                     cols,
                     key="lxp_name_col"
                 )
 
             with col_map3:
                 score_col = st.selectbox(
-                    "Score column",
+                    "Онооны багана",
                     cols,
                     key="lxp_score_col"
                 )
@@ -1633,14 +1612,14 @@ ChatGPT AI зөвлөмж:
                 "Score": lxp_df_original[score_col]
             })
 
-            st.markdown("### ✅ LXP Ready Preview")
+            st.markdown("### ✅ LXP-д бэлэн урьдчилсан харагдац")
 
             st.dataframe(
                 lxp_ready_df,
                 use_container_width=True
             )
 
-            if st.button("➕ Excel-с Batch List рүү нэмэх", key="add_excel_to_batch"):
+            if st.button("➕ Excel-с Дүнгийн багц руу нэмэх", key="add_excel_to_batch"):
                 added_count = 0
                 skipped_count = 0
 
@@ -1669,7 +1648,7 @@ ChatGPT AI зөвлөмж:
                         added_count += 1
 
                 st.success(
-                    f"{added_count} сурагч Batch List-д нэмэгдлээ. "
+                    f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
                     f"{skipped_count} давхардсан сурагч алгасагдлаа."
                 )
                 st.rerun()
@@ -1684,7 +1663,7 @@ ChatGPT AI зөвлөмж:
                 )
 
             st.download_button(
-                "⬇️ Download LXP Ready Excel",
+                "⬇️ LXP-д бэлэн Excel татах",
                 data=output.getvalue(),
                 file_name="LXP_READY.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -1733,7 +1712,7 @@ setTimeout(() => postToExtension("SAVE_LXP_PAYLOAD"), 3000);
         font-size:16px;
         width:100%;
     ">
-    SEND ALL TO LXP
+    БҮХ ДҮНГ LXP РҮҮ ИЛГЭЭХ
 </button>
 
 <script>
@@ -1747,17 +1726,15 @@ async function sendAllToLXP(){{
     }}
 
     postToExtension("SEND_TO_LXP");
-    alert("Batch list clipboard-д хадгалагдлаа. Одоо LXP tab дээр extension → AUTO FILL LXP дарна.");
+    alert("Дүнгийн багц хадгалагдлаа. Одоо LXP tab дээр өргөтгөл → LXP АВТОМАТААР БӨГЛӨХ дарна.");
 }}
 </script>
 """,
             height=80,
         )
 
-        if st.button("CLEAR BATCH"):
+        if st.button("ДҮНГИЙН БАГЦ ЦЭВЭРЛЭХ"):
             st.session_state.batch_results = []
             st.rerun()
     else:
-        st.info("Batch list хоосон байна.")
-elif app_mode == "📷 OMR шалгалт засах → LXP":
-    st.info("Excel болон сурагчийн зураг оруулна уу.")
+        st.info("Дүнгийн багц хоосон байна.")
