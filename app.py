@@ -1061,21 +1061,6 @@ if app_mode == "📁 Excel → LXP Autofill":
                     st.session_state.batch_results = []
                     st.rerun()
 
-            output = BytesIO()
-
-            with pd.ExcelWriter(output, engine="openpyxl") as writer:
-                lxp_ready_df.to_excel(
-                    writer,
-                    index=False,
-                )
-
-            st.download_button(
-                "⬇️ LXP-д бэлэн Excel татах",
-                data=output.getvalue(),
-                file_name="LXP_READY.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
-
         else:
             st.info("LXP-д оруулах Excel файлаа байршуулна уу.")
 
