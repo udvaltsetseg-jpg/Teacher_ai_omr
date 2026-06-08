@@ -737,17 +737,35 @@ function markInput(input, ok, title) {
 }
 
 function findStudentRow(student) {
-  const code = normalizeCode(student.code || student.StudentCode || student.student_code);
-  const name = normalizeText(student.name || student.StudentName || student.student_name);
+  // Код ашиглахгүй. Сурагчийн нэрээр тааруулна.
+  const rawName = student.name || student.StudentName || student.student_name || "";
+  const name = normalizeText(rawName);
 
   const rows = Array.from(document.querySelectorAll("tr"));
 
+  if (!name || name === "nan") return null;
+
+  // 1. Нэр яг орсон мөрийг хайна
   for (const row of rows) {
     const text = normalizeText(row.innerText);
-    const upperText = normalizeCode(row.innerText);
+    if (text.includes(name)) return row;
+  }
 
-    if (code && upperText.includes(code)) return row;
-    if (name && name !== "nan" && text.includes(name)) return row;
+  // 2. Овог нэрийн зай, олон space, жижиг/том үсгийн зөрүүг сулруулж хайна
+  const compactName = name.replace(/\s+/g, "");
+  for (const row of rows) {
+    const compactText = normalizeText(row.innerText).replace(/\s+/g, "");
+    if (compactText.includes(compactName)) return row;
+  }
+
+  // 3. Нэрийн хэсгүүдээр хайна: дор хаяж 2 үг таарвал
+  const parts = name.split(/\s+/).filter(x => x.length >= 2);
+  if (parts.length >= 2) {
+    for (const row of rows) {
+      const text = normalizeText(row.innerText);
+      const matched = parts.filter(p => text.includes(p)).length;
+      if (matched >= Math.min(2, parts.length)) return row;
+    }
   }
 
   return null;
@@ -783,7 +801,7 @@ function fillLXP(payload) {
   }
 
   payload.forEach((student) => {
-    const code = student.code || student.StudentCode || student.student_code || "";
+    const code = "";
     const name = student.name || student.StudentName || student.student_name || "";
     const score = student.score ?? student.Score ?? student.grade ?? student.Grade;
 
@@ -791,7 +809,7 @@ function fillLXP(payload) {
 
     if (!scoreCheck.ok) {
       skipped++;
-      errors.push({ code: code || name || "unknown", score, message: scoreCheck.message });
+      errors.push({ code: name || "unknown", score, message: scoreCheck.message });
       return;
     }
 
@@ -799,7 +817,7 @@ function fillLXP(payload) {
 
     if (!row) {
       skipped++;
-      errors.push({ code: code || name || "unknown", score, message: "LXP жагсаалтаас сурагч олдсонгүй" });
+      errors.push({ code: name || "unknown", score, message: "LXP жагсаалтаас сурагч олдсонгүй" });
       return;
     }
 
@@ -807,7 +825,7 @@ function fillLXP(payload) {
 
     if (!input) {
       skipped++;
-      errors.push({ code: code || name || "unknown", score, message: "оноо оруулах input олдсонгүй" });
+      errors.push({ code: name || "unknown", score, message: "оноо оруулах input олдсонгүй" });
       return;
     }
 
@@ -931,10 +949,26 @@ if app_mode == "📁 Excel → LXP Autofill":
                 key="direct_lxp_sheet_select",
             )
 
+            header_row = st.number_input(
+                "📌 Толгой мөрийн дугаар /column header row/",
+                min_value=1,
+                max_value=30,
+                value=1,
+                step=1,
+                help="Хэрэв Excel дээр дээрээ гарчигтай, хүснэгт 4-р мөрөөс эхэлж байвал 4 гэж сонгоно.",
+                key="direct_lxp_header_row",
+            )
+
             lxp_df_original = pd.read_excel(
                 excel_file,
                 sheet_name=selected_sheet,
+                header=header_row - 1,
             )
+
+            # Хоосон мөр/багануудыг цэвэрлэх
+            lxp_df_original = lxp_df_original.dropna(how="all")
+            lxp_df_original = lxp_df_original.dropna(axis=1, how="all")
+            lxp_df_original.columns = [str(c).strip() for c in lxp_df_original.columns]
 
             st.success(f"'{selected_sheet}' sheet амжилттай уншигдлаа")
 
@@ -945,23 +979,16 @@ if app_mode == "📁 Excel → LXP Autofill":
 
             cols = list(lxp_df_original.columns)
 
-            col_map1, col_map2, col_map3 = st.columns(3)
+            col_map1, col_map2 = st.columns(2)
 
             with col_map1:
-                code_col = st.selectbox(
-                    "Сурагчийн кодын багана",
-                    cols,
-                    key="direct_lxp_code_col",
-                )
-
-            with col_map2:
                 name_col = st.selectbox(
                     "Сурагчийн нэрийн багана",
                     cols,
                     key="direct_lxp_name_col",
                 )
 
-            with col_map3:
+            with col_map2:
                 score_col = st.selectbox(
                     "Онооны багана",
                     cols,
@@ -969,10 +996,16 @@ if app_mode == "📁 Excel → LXP Autofill":
                 )
 
             lxp_ready_df = pd.DataFrame({
-                "StudentCode": lxp_df_original[code_col],
+                "Code": "",
                 "StudentName": lxp_df_original[name_col],
                 "Score": lxp_df_original[score_col],
             })
+
+            lxp_ready_df["StudentName"] = lxp_ready_df["StudentName"].astype(str).str.strip()
+            lxp_ready_df = lxp_ready_df[
+                (lxp_ready_df["StudentName"] != "") &
+                (lxp_ready_df["StudentName"].str.lower() != "nan")
+            ]
 
             st.markdown("### ✅ LXP-д бэлэн урьдчилсан харагдац")
 
@@ -989,20 +1022,21 @@ if app_mode == "📁 Excel → LXP Autofill":
                     skipped_count = 0
 
                     for _, row in lxp_ready_df.iterrows():
-                        code = str(row["StudentCode"]).strip()
+                        code = ""
                         name = str(row["StudentName"]).strip()
 
                         try:
                             score = float(row["Score"])
                         except Exception:
-                            score = 0
+                            skipped_count += 1
+                            continue
 
-                        if code == "" or code.lower() == "nan":
+                        if name == "" or name.lower() == "nan":
                             skipped_count += 1
                             continue
 
                         exists = any(
-                            str(x.get("code", "")).strip() == code
+                            str(x.get("name", "")).strip().lower() == name.lower()
                             for x in st.session_state.batch_results
                         )
 
@@ -1017,7 +1051,7 @@ if app_mode == "📁 Excel → LXP Autofill":
                             added_count += 1
 
                     st.success(
-                        f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
+                        f"{added_count} сурагч нэрээр Дүнгийн багцад нэмэгдлээ. "
                         f"{skipped_count} мөр алгасагдлаа."
                     )
                     st.rerun()
@@ -1587,7 +1621,7 @@ ChatGPT AI зөвлөмж:
 
             with col_map1:
                 code_col = st.selectbox(
-                    "Сурагчийн кодын багана",
+                    "Сурагчийн нэрээр тааруулна /код ашиглахгүй/",
                     cols,
                     key="lxp_code_col"
                 )
@@ -1607,7 +1641,7 @@ ChatGPT AI зөвлөмж:
                 )
 
             lxp_ready_df = pd.DataFrame({
-                "StudentCode": lxp_df_original[code_col],
+                "Code": lxp_df_original[code_col],
                 "StudentName": lxp_df_original[name_col],
                 "Score": lxp_df_original[score_col]
             })
@@ -1624,7 +1658,7 @@ ChatGPT AI зөвлөмж:
                 skipped_count = 0
 
                 for _, row in lxp_ready_df.iterrows():
-                    code = str(row["StudentCode"]).strip()
+                    code = str(row["Code"]).strip()
                     name = str(row["StudentName"]).strip()
 
                     try:
@@ -1648,7 +1682,7 @@ ChatGPT AI зөвлөмж:
                         added_count += 1
 
                 st.success(
-                    f"{added_count} сурагч Дүнгийн багцад нэмэгдлээ. "
+                    f"{added_count} сурагч нэрээр Дүнгийн багцад нэмэгдлээ. "
                     f"{skipped_count} давхардсан сурагч алгасагдлаа."
                 )
                 st.rerun()
